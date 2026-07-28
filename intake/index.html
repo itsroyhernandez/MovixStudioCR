@@ -55,6 +55,8 @@
   @keyframes iconNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
 
   /* ---------- ambient backdrop (always moving, never a static screenshot) ---------- */
+  #lava{position:fixed;inset:0;z-index:-2;width:100vw;height:100vh;pointer-events:none}
+  body.lava-on .aurora span{display:none}
   .aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
   .aurora span{position:absolute;border-radius:50%;filter:blur(64px);opacity:.32;animation:floatBlob 16s ease-in-out infinite}
   .aurora .a1{width:48vw;height:48vw;top:-16vw;right:-12vw;background:var(--violet)}
@@ -335,11 +337,14 @@
     font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:50;box-shadow:var(--shadow)}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-  .fadein{opacity:0;transform:translateY(10px);animation:fadeInUp .5s ease forwards}
-  @keyframes fadeInUp{to{opacity:1;transform:none}}
+  .fadein{opacity:0;transform:perspective(900px) translateY(16px) rotateX(6deg);transform-origin:50% 0;
+    animation:fadeInUp .6s cubic-bezier(.2,.7,.3,1) forwards}
+  @keyframes fadeInUp{to{opacity:1;transform:perspective(900px) translateY(0) rotateX(0)}}
   @media (prefers-reduced-motion:reduce){.fadein{opacity:1;transform:none;animation:none}}
+  .card--pad{padding-bottom:18px}
 </style>
 
+<canvas id="lava" aria-hidden="true"></canvas>
 <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span><span class="a4"></span><div class="aurora__grid"></div></div>
 <div class="embers" id="embers" aria-hidden="true"></div>
 
@@ -437,6 +442,68 @@
 <script>
 (function(){
   "use strict";
+
+  /* ============================================================
+     LÁMPARA DE LAVA — metaballs en WebGL, lentísimas a propósito.
+     Un ciclo completo de cada burbuja tarda ~2 minutos: se nota el
+     movimiento sin distraer. Fallback: la aurora CSS de siempre.
+     ============================================================ */
+  (function initLava(){
+    var canvas=document.getElementById("lava");
+    if(!canvas) return;
+    var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var gl=canvas.getContext("webgl",{alpha:true,antialias:false,premultipliedAlpha:true});
+    if(!gl) return;
+    var Q=0.42; /* render a baja resolución: las metaballs son borrosas por diseño */
+    function fit(){
+      canvas.width=Math.max(2,innerWidth*Q);canvas.height=Math.max(2,innerHeight*Q);
+      gl.viewport(0,0,canvas.width,canvas.height);
+    }
+    fit();addEventListener("resize",fit);
+    var VS="attribute vec2 aP;void main(){gl_Position=vec4(aP,0.,1.);}";
+    var FS="precision mediump float;uniform vec2 uR;uniform float uT;"+
+      "void main(){vec2 uv=gl_FragCoord.xy/uR;vec2 p=uv;p.x*=uR.x/uR.y;"+
+      "float fv=0.;float fc=0.;"+
+      "for(int i=0;i<7;i++){float fi=float(i);"+
+      "float sp=0.045+0.012*fi;"+
+      "vec2 c=vec2(0.16+0.113*fi+0.15*sin(uT*sp*0.7+fi*2.1),0.5+0.44*sin(uT*sp+fi*1.7));"+
+      "c.x*=uR.x/uR.y;"+
+      "float r=0.11+0.05*sin(fi*3.7+uT*0.05);"+
+      "float d=max(length(p-c),0.001);"+
+      "float f=r*r/(d*d);"+
+      "if(mod(fi,2.)<1.)fv+=f;else fc+=f;}"+
+      "float F=fv+fc;"+
+      "vec3 vio=vec3(0.486,0.361,1.0);vec3 cor=vec3(1.0,0.357,0.239);"+
+      "vec3 col=(vio*fv+cor*fc)/max(F,0.001);"+
+      "float body=smoothstep(0.95,1.7,F);"+
+      "float glow=smoothstep(0.4,1.1,F)*0.16;"+
+      "float a=body*0.30+glow;"+
+      "gl_FragColor=vec4(col*a,a);}";
+    function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o;}
+    var pr=gl.createProgram();
+    gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));
+    gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));
+    gl.linkProgram(pr);
+    if(!gl.getProgramParameter(pr,gl.LINK_STATUS)) return;
+    gl.useProgram(pr);
+    document.body.classList.add("lava-on");
+    var b=gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER,b);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    var aP=gl.getAttribLocation(pr,"aP");
+    gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,2,gl.FLOAT,false,0,0);
+    var uR=gl.getUniformLocation(pr,"uR"),uT=gl.getUniformLocation(pr,"uT");
+    gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+    gl.clearColor(0,0,0,0);
+    function draw(ms){
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform2f(uR,canvas.width,canvas.height);
+      gl.uniform1f(uT,ms*0.001);
+      gl.drawArrays(gl.TRIANGLES,0,3);
+      if(!reduced) requestAnimationFrame(draw);
+    }
+    if(reduced) draw(40000); else requestAnimationFrame(draw);
+  })();
 
   /* ---------- ambient embers (background motion) ---------- */
   (function initEmbers(){
@@ -920,7 +987,17 @@
      ============================================================ */
   function BASE(){
     return [
-      {title:"La marca", num:"01",
+      {title:"Sobre vos", num:"01",
+        lead:"Quién nos escribe y cómo seguimos la conversación. Es lo primero que leemos cuando llega tu brief.",
+        fields:[
+          T("Tu nombre completo","Nombre de contacto"),
+          Ti("Tu puesto o rol en el negocio","Rol","Dueño, gerente, mercadeo…"),
+          Ph("Tu WhatsApp directo","WhatsApp de contacto"),
+          T("Tu correo","Correo de contacto"),
+          Ti("¿Cuándo querés arrancar?","Inicio deseado","Ya mismo, este mes, en 1–3 meses…"),
+          To("¿Cómo conociste a Movix Studio?","Cómo nos conociste","Instagram, referido, Google…")
+        ]},
+      {title:"La marca", num:"02",
         lead:"Cómo se llama, quién es legalmente y cómo habla.",
         fields:[
           T("Nombre comercial","Nombre comercial","Como querés que la gente lo diga"),
@@ -931,7 +1008,7 @@
           Wr("¿Cómo habla la marca?","Tono de voz","imp"),
           Wr("¿Qué te hace distinto de tu competencia directa?","Diferenciador","imp")
         ]},
-      {title:"Contacto", num:"02",
+      {title:"Contacto", num:"03",
         lead:"Los números y correos que van públicos. En los teléfonos, solo escribí los números.",
         fields:[
           Ph("WhatsApp de ventas","WhatsApp de ventas"),
@@ -940,7 +1017,7 @@
           T("Dominio web actual o deseado","Dominio"),
           Ti("¿El dominio ya está comprado? ¿Dónde?","Estado del dominio")
         ]},
-      {title:"Identidad digital y accesos", num:"03",
+      {title:"Identidad digital y accesos", num:"04",
         lead:"No escribas contraseñas aquí — solo decinos qué existe. Vos quedás siempre como dueño de todo.",
         extra:"logo",
         fields:[
@@ -951,7 +1028,7 @@
           Ti("Google Business / Maps","Google Business"),
           Price("Presupuesto mensual para pauta","Presupuesto de pauta","imp")
         ]},
-      {title:"Público y metas", num:"04",
+      {title:"Público y metas", num:"05",
         lead:"A quién le hablás y qué tiene que pasar en 90 días para llamarlo éxito.",
         fields:[
           Wr("¿Quién es tu cliente ideal hoy?","Cliente ideal"),
@@ -1094,8 +1171,8 @@
 
   function renderTopicsSection(){
     var el=document.createElement("section");
-    el.className="sec fadein";el.id="sec-07";
-    el.innerHTML='<div class="sec__head"><span class="sec__num">07</span>'+
+    el.className="sec fadein";el.id="sec-08";
+    el.innerHTML='<div class="sec__head"><span class="sec__num">08</span>'+
       '<h2 class="sec__title">Posibles temas a tocar</h2></div>'+
       '<p class="sec__lead">Esto no hay que llenarlo — se arma solo con lo que ya escribiste arriba, '+
       'para tenerlo listo en la reunión de arranque.</p>'+
@@ -1194,6 +1271,8 @@
       }
     }
 
+    if(v("Inicio deseado")) topics.push("Agendar la reunión de arranque — quieren iniciar: <b>"+escapeHTML(v("Inicio deseado"))+"</b>.");
+    if(v("Cómo nos conociste")) topics.push("Registrar el canal que trajo este lead: <b>"+escapeHTML(v("Cómo nos conociste"))+"</b>.");
     if(v("Diferenciador")) topics.push("Cómo metemos tu diferenciador — \"<b>"+escapeHTML(v("Diferenciador"))+"</b>\" — en el primer contenido que publiquemos.");
     if(v("Cliente ideal")) topics.push("Validar que todo el contenido le hable directo a: <b>"+escapeHTML(v("Cliente ideal"))+"</b>.");
     if(v("Meta del trimestre")) topics.push("Armar cómo medimos el avance hacia la meta del trimestre: <b>"+escapeHTML(v("Meta del trimestre"))+"</b>.");
@@ -1243,7 +1322,7 @@
     var el=document.createElement("section");
     el.className="sec fadein";el.id="sec-"+r.num;
     el.innerHTML='<div class="sec__head"><span class="sec__num">'+r.num+'</span><h2 class="sec__title">'+r.title+'</h2></div>'+
-      '<p class="sec__lead">'+r.lead+'</p><div class="card" style="padding-bottom:18px" id="repeatWrap"></div>';
+      '<p class="sec__lead">'+r.lead+'</p><div class="card card--pad" id="repeatWrap"></div>';
     var addBtn=document.createElement("button");
     addBtn.type="button";addBtn.className="addbtn";
     addBtn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Agregar otro '+r.singular.toLowerCase();
@@ -1264,8 +1343,9 @@
     document.getElementById("fh-title").textContent=cat.title;
     document.getElementById("fh-lead").textContent=cat.lead;
 
-    var sections=BASE().slice(0,4);
-    sections.splice(4,0,cat.core);
+    var sections=BASE();
+    cat.core.num="06";cat.repeat.num="07";
+    sections.push(cat.core);
 
     formmain.innerHTML="";
     tocRow.innerHTML="";
@@ -1289,7 +1369,7 @@
 
     var topicsSec=renderTopicsSection();
     formmain.appendChild(topicsSec);
-    var a3=document.createElement("a");a3.href="#sec-07";a3.textContent="Posibles temas a tocar";tocRow.appendChild(a3);
+    var a3=document.createElement("a");a3.href="#sec-08";a3.textContent="Posibles temas a tocar";tocRow.appendChild(a3);
 
     catview.classList.add("hidden");
     formview.classList.add("active");
