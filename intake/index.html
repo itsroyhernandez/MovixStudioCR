@@ -97,12 +97,16 @@
     border-radius:16px;background:linear-gradient(135deg,var(--violet),var(--coral));display:grid;place-items:center;
     color:#fff;box-shadow:0 20px 46px -18px rgba(124,92,255,.65);animation:breathe 3s ease-in-out infinite}
   .hero__deco .playbig svg{width:22px;height:22px}
+  .hero__deco .play3d{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:170px;height:170px;
+    filter:drop-shadow(0 26px 34px rgba(124,92,255,.42))}
+  .hero__deco.gl .playbig{display:none}
   /* tablets (iPad landscape/portrait): shrink first, then hide on narrower phones */
   @media (max-width:1024px) and (min-width:841px){
     .hero__deco{width:200px;height:200px;top:-10px;right:-10px}
     .hero__deco .ring{width:52px;height:52px}
     .hero__deco .playbig{width:50px;height:50px;border-radius:14px}
     .hero__deco .playbig svg{width:19px;height:19px}
+    .hero__deco .play3d{width:135px;height:135px}
   }
   @media (max-width:840px){.hero__deco{display:none}}
 
@@ -125,14 +129,16 @@
 
   .catgrid__label{margin:34px 0 14px;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
     font-weight:700;color:var(--ink-faint)}
-  .catgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 12px}
+  .catgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 12px;perspective:900px}
   @media (max-width:1024px) and (min-width:821px){.catgrid{gap:12px}}
   @media (max-width:820px){.catgrid{grid-template-columns:repeat(2,1fr)}}
   @media (max-width:520px){.catgrid{grid-template-columns:1fr}}
 
   .catcard{position:relative;text-align:left;background:var(--bg-elev);border:1px solid var(--line);
     border-radius:16px;padding:20px 20px 18px;cursor:pointer;font-family:var(--sans);color:var(--ink);
-    transition:border-color .18s,transform .18s,background .18s;overflow:hidden}
+    transition:border-color .18s,transform .18s,background .18s;overflow:hidden;
+    transform-style:preserve-3d;will-change:transform}
+  .catcard.tilting{transition:border-color .18s,background .18s}
   .catcard::after{content:"";position:absolute;inset:0;border-radius:16px;padding:1px;
     background:linear-gradient(135deg,var(--violet),var(--coral));opacity:0;
     -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
@@ -350,9 +356,10 @@
 <!-- ============ VISTA 1 — SELECTOR DE CATEGORÍA ============ -->
 <div id="catview">
   <div class="wrap hero">
-    <div class="hero__deco" aria-hidden="true">
+    <div class="hero__deco" id="heroDeco" aria-hidden="true">
       <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
       <span class="playbig"><svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7Z" fill="currentColor"/></svg></span>
+      <canvas class="play3d" id="play3d"></canvas>
     </div>
     <p class="eyebrow">Un formulario. Todas las industrias.</p>
     <h1 class="hero__title">Dale play a <span class="grad">tu marca.</span><span class="caret" aria-hidden="true"></span></h1>
@@ -447,6 +454,135 @@
       wrap.appendChild(s);
     }
   })();
+
+  /* ============================================================
+     PLAY 3D — WebGL puro, sin librerías. Un prisma triangular (el
+     play de Movix) girando con luz violeta/coral; sigue el mouse.
+     Si WebGL no está disponible, queda el play plano de siempre.
+     ============================================================ */
+  (function initPlay3D(){
+    var canvas=document.getElementById("play3d");
+    var deco=document.getElementById("heroDeco");
+    if(!canvas||!deco) return;
+    var reduced=window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var gl=canvas.getContext("webgl",{alpha:true,antialias:true});
+    if(!gl){ canvas.remove(); return; }
+    deco.classList.add("gl");
+
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    function fit(){
+      var s=canvas.clientWidth||170;
+      canvas.width=s*dpr;canvas.height=s*dpr;
+      gl.viewport(0,0,canvas.width,canvas.height);
+    }
+    fit();window.addEventListener("resize",fit);
+
+    var VS="attribute vec3 aP;attribute vec3 aN;uniform mat4 uMVP;uniform mat4 uM;"+
+      "varying vec3 vN;varying vec3 vP;void main(){vN=mat3(uM[0].xyz,uM[1].xyz,uM[2].xyz)*aN;"+
+      "vP=(uM*vec4(aP,1.)).xyz;gl_Position=uMVP*vec4(aP,1.);}";
+    var FS="precision mediump float;varying vec3 vN;varying vec3 vP;"+
+      "void main(){vec3 N=normalize(vN);"+
+      "vec3 vio=vec3(0.486,0.361,1.0);vec3 cor=vec3(1.0,0.357,0.239);"+
+      "vec3 base=mix(vio,cor,clamp(vP.x*0.55+0.5,0.,1.));"+
+      "vec3 L1=normalize(vec3(-0.5,0.8,0.6));vec3 L2=normalize(vec3(0.7,-0.3,0.5));"+
+      "float d=0.5*max(dot(N,L1),0.)+0.35*max(dot(N,L2),0.);"+
+      "vec3 H=normalize(L1+vec3(0.,0.,1.));float sp=pow(max(dot(N,H),0.),26.)*0.4;"+
+      "gl_FragColor=vec4(base*(0.42+d)+sp,1.0);}";
+    function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+    var prog=gl.createProgram();
+    gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));
+    gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));
+    gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){ canvas.remove();deco.classList.remove("gl");return; }
+    gl.useProgram(prog);
+
+    /* prisma triangular = triángulo de play extruido */
+    var A=[-0.55,0.75],B=[-0.55,-0.75],C=[0.85,0],D=0.26;
+    var verts=[];
+    function tri(p1,p2,p3){
+      var u=[p2[0]-p1[0],p2[1]-p1[1],p2[2]-p1[2]],v=[p3[0]-p1[0],p3[1]-p1[1],p3[2]-p1[2]];
+      var n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+      var l=Math.hypot(n[0],n[1],n[2])||1;n=[n[0]/l,n[1]/l,n[2]/l];
+      [p1,p2,p3].forEach(function(p){verts.push(p[0],p[1],p[2],n[0],n[1],n[2]);});
+    }
+    function quad(p,q){ /* lado de la arista p->q */
+      var pf=[p[0],p[1],D],pb=[p[0],p[1],-D],qf=[q[0],q[1],D],qb=[q[0],q[1],-D];
+      tri(pf,pb,qb);tri(pf,qb,qf);
+    }
+    tri([A[0],A[1],D],[B[0],B[1],D],[C[0],C[1],D]);      /* frente */
+    tri([A[0],A[1],-D],[C[0],C[1],-D],[B[0],B[1],-D]);   /* atrás */
+    quad(A,B);quad(B,C);quad(C,A);
+    var nVerts=verts.length/6;
+
+    var buf=gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(verts),gl.STATIC_DRAW);
+    var aP=gl.getAttribLocation(prog,"aP"),aN=gl.getAttribLocation(prog,"aN");
+    gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,3,gl.FLOAT,false,24,0);
+    gl.enableVertexAttribArray(aN);gl.vertexAttribPointer(aN,3,gl.FLOAT,false,24,12);
+    var uMVP=gl.getUniformLocation(prog,"uMVP"),uM=gl.getUniformLocation(prog,"uM");
+    gl.enable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);
+
+    function mul(a,b){
+      var o=new Array(16);
+      for(var r=0;r<4;r++)for(var c=0;c<4;c++){
+        o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];
+      }
+      return o;
+    }
+    function rotY(t){var c=Math.cos(t),s=Math.sin(t);return [c,0,-s,0, 0,1,0,0, s,0,c,0, 0,0,0,1];}
+    function rotX(t){var c=Math.cos(t),s=Math.sin(t);return [1,0,0,0, 0,c,s,0, 0,-s,c,0, 0,0,0,1];}
+    function persp(fov,n,f){
+      var t=1/Math.tan(fov/2),d=1/(n-f);
+      return [t,0,0,0, 0,t,0,0, 0,0,(n+f)*d,-1, 0,0,2*n*f*d,0];
+    }
+    var proj=persp(0.62,0.1,10);
+    var view=[1,0,0,0, 0,1,0,0, 0,0,1,0, 0,-0.02,-3.6,1];
+
+    /* el play sigue el mouse con suavizado */
+    var tx=0,ty=0,cx=0,cy=0;
+    if(!("ontouchstart" in window)){
+      window.addEventListener("pointermove",function(e){
+        var r=canvas.getBoundingClientRect();
+        var mx=(e.clientX-(r.left+r.width/2))/window.innerWidth;
+        var my=(e.clientY-(r.top+r.height/2))/window.innerHeight;
+        ty=Math.max(-0.6,Math.min(0.6,mx*1.6));
+        tx=Math.max(-0.45,Math.min(0.45,my*1.3));
+      });
+    }
+
+    function draw(t){
+      cx+=(tx-cx)*0.06;cy+=(ty-cy)*0.06;
+      var spin=reduced?0.45:Math.sin(t*0.00085)*0.6;
+      var wob=reduced?-0.12:Math.sin(t*0.0011)*0.16;
+      var model=mul(rotX(wob+cx),rotY(spin+cy));
+      gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+      gl.uniformMatrix4fv(uM,false,new Float32Array(model));
+      gl.uniformMatrix4fv(uMVP,false,new Float32Array(mul(proj,mul(view,model))));
+      gl.drawArrays(gl.TRIANGLES,0,nVerts);
+      if(!reduced) requestAnimationFrame(draw);
+    }
+    if(reduced) draw(0); else requestAnimationFrame(draw);
+  })();
+
+  /* ============================================================
+     TILT 3D — las tarjetas de categoría se inclinan con el cursor
+     ============================================================ */
+  function wireTilt(card){
+    if(!window.matchMedia||matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if("ontouchstart" in window) return;
+    card.addEventListener("pointermove",function(e){
+      var r=card.getBoundingClientRect();
+      var px=(e.clientX-r.left)/r.width-0.5;
+      var py=(e.clientY-r.top)/r.height-0.5;
+      card.classList.add("tilting");
+      card.style.transform="translateY(-3px) scale(1.015) rotateX("+(-py*7).toFixed(2)+"deg) rotateY("+(px*9).toFixed(2)+"deg)";
+    });
+    card.addEventListener("pointerleave",function(){
+      card.classList.remove("tilting");
+      card.style.transform="";
+    });
+  }
 
   /* ============================================================
      ICONOS — trazos geométricos simples, sin librerías externas
@@ -868,6 +1004,7 @@
     b.innerHTML='<div class="catcard__mark">'+markSvg(c.mark)+'</div><h3>'+c.name+'</h3><p>'+c.desc+
       '</p><span class="catcard__cta">Dale play →</span>';
     b.addEventListener("click",function(e){ burst(e.clientX,e.clientY); openCategory(c.id); });
+    wireTilt(b);
     catgrid.appendChild(b);
   });
 
