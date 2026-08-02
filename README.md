@@ -2,40 +2,62 @@
 
 [![Seguridad](https://github.com/itsroyhernandez/MovixStudioCR/actions/workflows/security.yml/badge.svg)](https://github.com/itsroyhernandez/MovixStudioCR/actions/workflows/security.yml)
 
-Propiedades web de **Movix Studio**. Todo es estático — sin build, sin backend,
+Propiedades web de **Movix Corporation S.R.L.** (San Rafael de Escazú, Costa
+Rica) y de su marca creativa **Movix Studio**. Todo es estático — sin backend,
 sin base de datos — lo que reduce la superficie de ataque al mínimo por diseño.
+
+> **Confidencialidad.** Este repositorio es público. El material corporativo
+> interno (participación accionaria, identificaciones de los socios,
+> presupuestos, rentabilidad, herramientas contratadas y hoja de ruta) **no
+> entra acá bajo ninguna circunstancia**. `scripts/check-csp.js` incluye un
+> barrido que falla la compilación si alguno de esos datos aparece en un
+> archivo publicado.
 
 ## Estructura
 
 | Ruta | Qué es |
 |---|---|
-| `index.html` | **Sitio oficial** de Movix Studio (hero 3D, servicios, proceso, industrias, seguridad, blog). |
+| `index.html` | **Sitio oficial** (hero 3D, servicios, ecosistema, seguridad, blog). |
 | `servicios/` | Índice y una página por servicio, con el proceso paso a paso. |
+| `ecosistema.html` | Movix Corporation y sus tres marcas: Movix Studio, Fidelix y Petix Care. |
 | `blog/` | Índice y artículos del estudio. |
 | `nosotros.html` | Historia, principios y el logo diverso animado. |
 | `soporte.html` | Asistente 24/7 y base de conocimiento. |
-| `contacto.html` | Centro de contacto: WhatsApp, brief y asistente. |
-| `seguridad.html` | Postura de seguridad pública: los controles activos, uno por uno. |
+| `contacto.html` | Centro de contacto: WhatsApp, brief, asistente y domicilio. |
+| `terminos.html` | Términos y condiciones (22 cláusulas, ley costarricense). |
 | `privacidad.html` | Política de privacidad, cookies y datos (Ley 8968 de Costa Rica). |
-| `intake/` | **Intake de marca**: el cliente elige su industria, llena el brief y lo envía por WhatsApp. |
-| `build-pages.js` | Generador de todas las páginas del sitio (`node build-pages.js`). |
-| `scripts/check-csp.js` | Verifica que los hashes CSP de `_headers` coincidan con el contenido real. |
-| `.github/workflows/security.yml` | Snyk Code + verificación de CSP en cada push, PR y cada lunes. |
-| `_headers` | Headers de seguridad para todo el sitio (cuando Netlify publica la raíz). |
-| `intake/_headers` | Headers de seguridad solo del intake (config actual de Netlify). |
+| `seguridad.html` | Postura de seguridad pública: los controles activos, uno por uno. |
+| `intake/` | **Brief de marca**: subpágina del sitio; el cliente elige su industria, lo llena y lo envía por WhatsApp. |
+| `assets/site.css` · `site.js` | Sistema visual y comportamiento compartidos por **todas** las páginas, intake incluido. |
+| `assets/intake.css` · `intake.js` | Capa propia del formulario. Se carga después de `site.css`. |
+| `build-pages.js` | Generador de las 20 páginas (`node build-pages.js`). |
+| `scripts/check-csp.js` | Guardia de CSP, de código en línea y de confidencialidad. |
+| `.github/workflows/security.yml` | Snyk Code + el guardia anterior, en cada push, PR y cada lunes. |
+| `_headers` · `intake/_headers` | Cabeceras de seguridad aplicadas en el CDN de Netlify. |
 
 ## Cómo editar el sitio
 
-El contenido vive en `build-pages.js` (arreglos `SERVICES`, `POSTS` y los
-cuerpos de cada página). Después de tocarlo:
+Todo el contenido vive en `build-pages.js` (arreglos `SERVICES`, `POSTS` y los
+cuerpos de cada página, incluido el del intake). **No edités los `.html` a
+mano**: se sobrescriben en la siguiente generación.
 
 ```bash
-node build-pages.js      # regenera todas las páginas
-node scripts/check-csp.js  # recalcula y verifica los hashes CSP
+node build-pages.js        # regenera las 20 páginas
+node scripts/check-csp.js  # verifica cabeceras, código en línea y confidencialidad
 ```
 
 Los dos comandos son los mismos que corre CI, así que si pasan localmente,
 pasan en GitHub.
+
+### Reglas que el guardia hace cumplir
+
+- **Cero código en línea.** Ni `<script>`, ni `<style>`, ni `style=`, ni
+  `onclick=`. Todo el JS y el CSS vive bajo `assets/`. Gracias a eso la CSP es
+  `script-src 'self'; style-src 'self'` — sin hashes que se desincronicen y sin
+  `'unsafe-inline'`.
+- **Cero recursos externos.** Ningún CDN, ninguna fuente remota, ningún píxel.
+  La única URL externa permitida es `https://wa.me/…`.
+- **Cero datos confidenciales** en el HTML publicado ni en el generador.
 
 ## Despliegue en Netlify
 

@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Seguridad — Movix Studio</title>
-<meta name="description" content="Cifrado en tránsito, política de contenido por hash, análisis continuo de código y cero rastreadores. Así está blindada la plataforma de Movix Studio.">
+<meta name="description" content="Cifrado en tránsito, política de contenido de denegación por defecto, análisis continuo de código y cero rastreadores. Así está blindada la plataforma de Movix Studio.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C5CFF'/%3E%3Cstop offset='1' stop-color='%23FF5B3D'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cpath d='M9.2 6.8v10.4l8.6-5.2z' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="./assets/site.css">
+
 </head>
 <body data-root="./">
 <canvas id="lava" aria-hidden="true"></canvas>
@@ -15,8 +16,10 @@
 <div class="brandbar"><div class="brandbar__inner">
     <a class="logo" href="./" aria-label="Movix Studio">
       <span class="logo__play"><svg viewBox="0 0 10 10" fill="none"><path d="M2 1.2 8.4 5 2 8.8Z" fill="#fff"/></svg></span><span class="logo__word">Movix Studio</span></a>
+    
     <nav aria-label="Secciones del sitio">
       <a href="./servicios/">Servicios</a>
+      <a href="./ecosistema.html">Ecosistema</a>
       <a href="./nosotros.html">Nosotros</a>
       <a href="./blog/">Blog</a>
       <a href="./soporte.html">Soporte</a>
@@ -52,13 +55,16 @@
         petición.</p></div>
       <div class="scard"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 5 6.3v5.4c0 4 2.9 7.5 7 8.8 4.1-1.3 7-4.8 7-8.8V6.3Z"/><path d="m9.2 12.2 2 2 3.6-4"/></svg></div><h3>Content Security Policy de denegación por defecto</h3>
         <p>La política arranca en <code>default-src 'none'</code>: nada se carga salvo lo que está
-        explícitamente permitido. Los scripts se autorizan por <strong>hash SHA-256</strong> del
-        contenido exacto, no por dominio — un script inyectado, aunque logre llegar al HTML, no se
-        ejecuta. Sin <em>eval</em>, sin orígenes comodín, sin dependencias de terceros.</p></div>
+        explícitamente permitido. <strong>No existe código en línea</strong>: todo el JavaScript y el
+        CSS vive en archivos propios del sitio, así que un script inyectado en el HTML —aunque logre
+        llegar ahí— simplemente no se ejecuta. Sin <em>eval</em>, sin <em>unsafe-inline</em>, sin
+        orígenes comodín, sin una sola dependencia de terceros.</p></div>
       <div class="scard"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5V6a2 2 0 0 1 2-2h2.5M20 8.5V6a2 2 0 0 0-2-2h-2.5M4 15.5V18a2 2 0 0 0 2 2h2.5M20 15.5V18a2 2 0 0 1-2 2h-2.5"/><path d="M4 12h16"/></svg></div><h3>Análisis continuo de código</h3>
         <p>Cada cambio pasa por <strong>Snyk Code</strong> (análisis estático de seguridad) y por un
-        verificador propio que recalcula los hashes de la política y falla la compilación si dejan de
-        coincidir con el contenido real. Los resultados se publican en formato <strong>SARIF</strong>
+        verificador propio que revisa página por página que nadie haya reintroducido código en línea,
+        un recurso externo o una directiva debilitada — y falla la compilación si lo encuentra. Ese
+        mismo verificador bloquea la publicación si detecta información corporativa que no debe ser
+        pública. Los resultados de Snyk se publican en formato <strong>SARIF</strong>
         dentro del panel de seguridad del repositorio. Además corre un barrido programado cada semana,
         para detectar vulnerabilidades descubiertas después del despliegue.</p></div>
       <div class="scard"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8"/><path d="M12 3.6c2.6 3.3 2.6 13.5 0 16.8-2.6-3.3-2.6-13.5 0-16.8Z"/></svg></div><h3>Superficie de ataque mínima por diseño</h3>
@@ -74,7 +80,7 @@
     cualquier navegador abriendo las herramientas de desarrollo, pestaña de red, cabeceras de respuesta.</p></div>
     <ul class="ticklist">
       <li><strong>Strict-Transport-Security</strong> — 63 072 000 s, <em>includeSubDomains</em>, <em>preload</em>.</li>
-      <li><strong>Content-Security-Policy</strong> — <em>default-src 'none'</em>; scripts por hash SHA-256; <em>connect-src</em> restringido al propio origen.</li>
+      <li><strong>Content-Security-Policy</strong> — <em>default-src 'none'</em>; <em>script-src</em> y <em>style-src</em> solo <em>'self'</em>, sin <em>unsafe-inline</em> ni <em>eval</em>; <em>connect-src</em> restringido al propio origen.</li>
       <li><strong>X-Frame-Options: DENY</strong> y <strong>frame-ancestors 'none'</strong> — doble barrera contra <em>clickjacking</em>.</li>
       <li><strong>X-Content-Type-Options: nosniff</strong> — impide que el navegador reinterprete un archivo como código.</li>
       <li><strong>Referrer-Policy</strong> — <em>strict-origin-when-cross-origin</em>: no se filtran rutas internas a sitios externos.</li>
@@ -109,7 +115,7 @@
 
   <section class="blk reveal">
     <div class="blk__head"><h2>Preguntas <span class="grad">directas.</span></h2></div>
-    <details class="faq"><summary>¿Esto aplica también a los sitios que ustedes construyen?</summary><p>Sí. La misma línea base de seguridad — cabeceras estrictas, política de contenido por hash, cifrado en tránsito y análisis estático en cada despliegue — es la que aplicamos a los sitios que desarrollamos para clientes. No es un extra que se cobra aparte: es el estándar mínimo del estudio.</p></details>
+    <details class="faq"><summary>¿Esto aplica también a los sitios que ustedes construyen?</summary><p>Sí. La misma línea base de seguridad — cabeceras estrictas, política de contenido sin código en línea, cifrado en tránsito y análisis estático en cada despliegue — es la que aplicamos a los sitios que desarrollamos para clientes. No es un extra que se cobra aparte: es el estándar mínimo del estudio.</p></details>
     <details class="faq"><summary>¿Tienen WAF y protección contra denegación de servicio?</summary><p>La plataforma se sirve desde una CDN global con mitigación de tráfico anómalo en el borde. Para marcas con dominio propio y perfil de riesgo alto configuramos además un firewall de aplicación con reglas gestionadas, limitación de tasa y filtrado por reputación de origen. Se define en la propuesta según lo que el proyecto realmente necesite.</p></details>
     <details class="faq"><summary>¿Manejan accesos a mis cuentas de redes o publicidad?</summary><p>Trabajamos siempre por delegación de permisos, nunca con tu contraseña: vos nos das acceso desde el administrador de tu propia cuenta y lo revocás cuando querrás. La propiedad de perfiles, píxeles y cuentas publicitarias es tuya desde el primer día y queda por escrito.</p></details>
     <details class="faq"><summary>¿Cómo puedo verificar lo que dice esta página?</summary><p>Abrí las herramientas de desarrollo del navegador en cualquier página de este sitio, mirá las cabeceras de respuesta y compará. También podés analizar el dominio con cualquier evaluador público de cabeceras de seguridad. Preferimos que lo compruebes a que nos creás.</p></details>
@@ -131,22 +137,33 @@
       <p>Agencia de marketing en Costa Rica. Estrategia, contenido, pauta e inteligencia artificial aplicada a vender.</p>
     </div>
     <div><h4>Servicios</h4><ul><li><a href="./servicios/social-media.html">Social media integral</a></li><li><a href="./servicios/contenido-video.html">Contenido y video</a></li><li><a href="./servicios/pauta-digital.html">Pauta digital</a></li><li><a href="./servicios/branding.html">Branding</a></li><li><a href="./servicios/sitios-web.html">Sitios web</a></li><li><a href="./servicios/ia-automatizaciones.html">IA y automatizaciones</a></li></ul></div>
-    <div><h4>Estudio</h4><ul>
+    <div><h4>Ecosistema</h4><ul>
+      <li><a href="./ecosistema.html">Movix Corporation</a></li>
+      <li><a href="./ecosistema.html#movix-studio">Movix Studio</a></li>
+      <li><a href="./ecosistema.html#fidelix">Fidelix</a></li>
+      <li><a href="./ecosistema.html#petix-care">Petix Care</a></li>
       <li><a href="./nosotros.html">Nosotros</a></li>
       <li><a href="./blog/">Blog</a></li>
-      <li><a href="./soporte.html">Soporte</a></li>
-      <li><a href="./contacto.html">Contacto</a></li>
-      <li><a href="./seguridad.html">Seguridad</a></li>
-      <li><a href="./privacidad.html">Privacidad y datos</a></li>
     </ul></div>
     <div><h4>Empezar</h4><ul>
       <li><a href="./intake/">Brief de marca</a></li>
       <li><a href="https://wa.me/50670863466" rel="noopener" target="_blank">WhatsApp +506 7086-3466</a></li>
-      <li><a href="#" data-open-chat>Soporte en línea</a></li>
+      <li><a href="./contacto.html">Contacto</a></li>
+      <li><a href="./soporte.html">Soporte en línea</a></li>
+      <li><a href="./seguridad.html">Seguridad</a></li>
     </ul></div>
   </div>
-  <div class="foot__legal"><span>© 2026 Movix Studio · Costa Rica</span><span>Sin cookies, sin rastreadores.</span></div>
+  <div class="foot__legal">
+    <span>© 2026 <strong>Movix Corporation S.R.L.</strong> · San Rafael de Escazú, Costa Rica</span>
+    <span class="foot__legal-links">
+      <a href="./terminos.html">Términos y condiciones</a>
+      <a href="./privacidad.html">Privacidad y datos</a>
+      <a href="./seguridad.html">Seguridad</a>
+    </span>
+    <span>Sin cookies, sin rastreadores.</span>
+  </div>
   </footer>
 <script src="./assets/site.js" defer></script>
+
 </body>
 </html>

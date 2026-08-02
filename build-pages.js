@@ -26,7 +26,14 @@ const ICON = {
   shield:'<path d="M12 3.5 5 6.3v5.4c0 4 2.9 7.5 7 8.8 4.1-1.3 7-4.8 7-8.8V6.3Z"/><path d="m9.2 12.2 2 2 3.6-4"/>',
   lock:'<rect x="5" y="10.5" width="14" height="9.5" rx="2.6"/><path d="M8.4 10.5V8a3.6 3.6 0 0 1 7.2 0v2.5"/><path d="M12 14.3v2.4"/>',
   scan:'<path d="M4 8.5V6a2 2 0 0 1 2-2h2.5M20 8.5V6a2 2 0 0 0-2-2h-2.5M4 15.5V18a2 2 0 0 0 2 2h2.5M20 15.5V18a2 2 0 0 1-2 2h-2.5"/><path d="M4 12h16"/>',
-  globe:'<circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8"/><path d="M12 3.6c2.6 3.3 2.6 13.5 0 16.8-2.6-3.3-2.6-13.5 0-16.8Z"/>'
+  globe:'<circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8"/><path d="M12 3.6c2.6 3.3 2.6 13.5 0 16.8-2.6-3.3-2.6-13.5 0-16.8Z"/>',
+  wallet:'<rect x="3.5" y="6.5" width="17" height="11.5" rx="2.6"/><path d="M3.5 10.5h17"/><circle cx="16.6" cy="14.4" r="1.2"/>',
+  bell:'<path d="M6.8 10.4a5.2 5.2 0 0 1 10.4 0c0 3.4 1.3 4.8 1.3 4.8H5.5s1.3-1.4 1.3-4.8Z"/><path d="M10.2 18.2a2 2 0 0 0 3.6 0"/>',
+  heart:'<path d="M12 19.2s-6.6-3.9-6.6-8.4a3.6 3.6 0 0 1 6.6-2 3.6 3.6 0 0 1 6.6 2c0 4.5-6.6 8.4-6.6 8.4Z"/>',
+  layers:'<path d="m12 4 8 4.2-8 4.2-8-4.2Z"/><path d="m4 12.8 8 4.2 8-4.2"/><path d="m4 16.8 8 4.2 8-4.2"/>',
+  pride:'<circle cx="12" cy="12" r="8.4"/><path d="M10 8.6v6.8l5-3.4Z"/>',
+  doc:'<path d="M6.5 3.8h7.2L18 8.1v12.1H6.5Z"/><path d="M13.4 3.8v4.5H18"/><path d="M9.2 12.4h5.6M9.2 15.6h5.6"/>',
+  scale:'<path d="M12 4.6v15"/><path d="M6.5 19.4h11"/><path d="M4 9.4h16"/><path d="M4 9.4 6.6 15h-5.2Z"/><path d="M20 9.4 22.6 15h-5.2Z"/>'
 };
 const mark = k => `<div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICON[k]}</svg></div>`;
 
@@ -184,12 +191,14 @@ const POSTS = [
 ];
 
 /* ---------- plantillas compartidas ---------- */
-function brandbar(root){
+function brandbar(root, tag){
   return `<div class="brandbar"><div class="brandbar__inner">
     <a class="logo" href="${root}" aria-label="Movix Studio">
       <span class="logo__play">${PLAY_SVG}</span><span class="logo__word">Movix Studio</span></a>
+    ${tag ? `<span class="brandbar__tag">${tag}</span>` : ""}
     <nav aria-label="Secciones del sitio">
       <a href="${root}servicios/">Servicios</a>
+      <a href="${root}ecosistema.html">Ecosistema</a>
       <a href="${root}nosotros.html">Nosotros</a>
       <a href="${root}blog/">Blog</a>
       <a href="${root}soporte.html">Soporte</a>
@@ -207,21 +216,31 @@ function footer(root){
       <p>Agencia de marketing en Costa Rica. Estrategia, contenido, pauta e inteligencia artificial aplicada a vender.</p>
     </div>
     <div><h4>Servicios</h4><ul>${svc}</ul></div>
-    <div><h4>Estudio</h4><ul>
+    <div><h4>Ecosistema</h4><ul>
+      <li><a href="${root}ecosistema.html">Movix Corporation</a></li>
+      <li><a href="${root}ecosistema.html#movix-studio">Movix Studio</a></li>
+      <li><a href="${root}ecosistema.html#fidelix">Fidelix</a></li>
+      <li><a href="${root}ecosistema.html#petix-care">Petix Care</a></li>
       <li><a href="${root}nosotros.html">Nosotros</a></li>
       <li><a href="${root}blog/">Blog</a></li>
-      <li><a href="${root}soporte.html">Soporte</a></li>
-      <li><a href="${root}contacto.html">Contacto</a></li>
-      <li><a href="${root}seguridad.html">Seguridad</a></li>
-      <li><a href="${root}privacidad.html">Privacidad y datos</a></li>
     </ul></div>
     <div><h4>Empezar</h4><ul>
       <li><a href="${root}intake/">Brief de marca</a></li>
       <li><a href="${WA}" rel="noopener" target="_blank">WhatsApp +506 7086-3466</a></li>
-      <li><a href="#" data-open-chat>Soporte en línea</a></li>
+      <li><a href="${root}contacto.html">Contacto</a></li>
+      <li><a href="${root}soporte.html">Soporte en línea</a></li>
+      <li><a href="${root}seguridad.html">Seguridad</a></li>
     </ul></div>
   </div>
-  <div class="foot__legal"><span>© 2026 Movix Studio · Costa Rica</span><span>Sin cookies, sin rastreadores.</span></div>
+  <div class="foot__legal">
+    <span>© 2026 <strong>Movix Corporation S.R.L.</strong> · San Rafael de Escazú, Costa Rica</span>
+    <span class="foot__legal-links">
+      <a href="${root}terminos.html">Términos y condiciones</a>
+      <a href="${root}privacidad.html">Privacidad y datos</a>
+      <a href="${root}seguridad.html">Seguridad</a>
+    </span>
+    <span>Sin cookies, sin rastreadores.</span>
+  </div>
   </footer>`;
 }
 function page(o){
@@ -234,15 +253,17 @@ function page(o){
 <meta name="description" content="${o.desc}">
 <link rel="icon" href="${FAVICON}">
 <link rel="stylesheet" href="${o.root}assets/site.css">
+${(o.css||[]).map(f=>`<link rel="stylesheet" href="${o.root}assets/${f}">`).join("\n")}
 </head>
-<body data-root="${o.root}">
+<body data-root="${o.root}"${o.bodyClass?` class="${o.bodyClass}"`:""}>
 <canvas id="lava" aria-hidden="true"></canvas>
 <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><div class="aurora__grid"></div></div>
 <div class="embers" id="embers" aria-hidden="true"></div>
-${brandbar(o.root)}
+${brandbar(o.root, o.tag)}
 ${o.body}
 ${footer(o.root)}
 <script src="${o.root}assets/site.js" defer></script>
+${(o.js||[]).map(f=>`<script src="${o.root}assets/${f}" defer></script>`).join("\n")}
 </body>
 </html>`;
 }
@@ -299,6 +320,24 @@ const homeBody = `
     <div class="blk__head"><h2>Tu industria ya tiene <span class="grad">su formulario.</span></h2>
     <p>El intake de Movix Studio se adapta a tu rubro: elegí tu categoría y el brief se arma solo con lo que tu negocio necesita.</p></div>
     <div class="inds">${INDUSTRIES.map(n=>`<a class="ind" href="intake/"><i></i>${n}</a>`).join("")}</div>
+  </section>
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Detrás del estudio, <span class="grad">un ecosistema.</span></h2>
+    <p>Movix Studio es la marca creativa de Movix Corporation S.R.L. El mismo grupo construye software
+    propio, así que cuando tu negocio necesita tecnología no te mandamos a otro proveedor.</p></div>
+    <div class="cards">
+      <a class="scard" href="ecosistema.html#movix-studio">${mark("video")}<h3>Movix Studio</h3>
+        <p>El motor creativo. Contenido, video vertical, pauta digital, branding e IA aplicada a vender.</p>
+        <span class="more">Ver la marca →</span></a>
+      <a class="scard" href="ecosistema.html#fidelix">${mark("wallet")}<h3>Fidelix</h3>
+        <p>Lealtad digital sin fricción: la tarjeta de puntos vive en Apple Wallet y Google Wallet, sin otra app que instalar.</p>
+        <span class="more">Ver la plataforma →</span></a>
+      <a class="scard" href="ecosistema.html#petix-care">${mark("heart")}<h3>Petix Care</h3>
+        <p>Marketplace de servicios para mascotas: agenda llena para veterinarias, atención de club para las familias.</p>
+        <span class="more">Ver la plataforma →</span></a>
+    </div>
+    <p class="fineprint">Trabajar con una marca del ecosistema abre condiciones preferenciales en las
+    otras. <a href="ecosistema.html">Ver cómo funciona el beneficio cruzado</a>.</p>
   </section>
   <section class="blk reveal">
     <div class="blk__head"><h2>Tu marca, <span class="grad">bien resguardada.</span></h2>
@@ -395,6 +434,13 @@ const nosotrosBody = `
     <p>Y trabajamos con las herramientas de esta década: renders generativos, asistentes conversacionales y
     automatización de flujos, siempre con dirección humana y criterio editorial. La tecnología multiplica el
     oficio; nunca lo sustituye.</p>
+    <h3>El estudio no trabaja solo</h3>
+    <p>Movix Studio es la marca creativa de <b>Movix Corporation S.R.L.</b>, sociedad costarricense con
+    domicilio en San Rafael de Escazú. El mismo grupo desarrolla software propio: <b>Fidelix</b>, una
+    plataforma de lealtad digital que vive en la billetera del teléfono, y <b>Petix Care</b>, un
+    marketplace de servicios para mascotas. Eso cambia lo que podemos ofrecerte: no revendemos
+    herramientas de terceros con una capa de servicio encima — cuando tu negocio necesita tecnología,
+    la construimos. <a href="ecosistema.html">Conocé el ecosistema completo</a>.</p>
   </div></section>
   <section class="blk reveal">
     <div class="blk__head"><h2>Lo que nos <span class="grad">gobierna.</span></h2></div>
@@ -403,6 +449,9 @@ const nosotrosBody = `
       <div class="scard">${mark("eye")}<h3>Precisión</h3><p>Datos antes que opiniones. Cada colón de pauta rastreado, cada decisión con evidencia, cada reporte sin maquillaje.</p></div>
       <div class="scard">${mark("hand")}<h3>Transparencia</h3><p>Vos sos dueño de todo: tus cuentas, tus accesos, tu contenido, tus datos. Nosotros administramos; jamás secuestramos.</p></div>
     </div>
+    <p class="fineprint">Lo de "vos sos dueño de todo" no es una frase de brochure: está redactado como
+    obligación en los <a href="terminos.html">términos y condiciones</a>, junto con el uso que le damos
+    a la inteligencia artificial y qué garantizamos exactamente.</p>
   </section>
   <section class="blk reveal">
     <div class="pride">
@@ -414,7 +463,8 @@ const nosotrosBody = `
         <p>Nuestra marca es violeta y coral los doce meses del año — y cuando el play se enciende en el
         espectro Progress Pride, no es una campaña: es una declaración de casa. En Movix Studio nadie tiene
         que cambiar quién es para entrar, trabajar o crear. La diversidad no es un mes en el calendario;
-        es parte del sistema de marca.</p>
+        es parte del sistema de marca — <b>con orgullo, siempre</b>. Con esa variante patrocinamos eventos
+        culturales e iniciativas de derechos humanos durante todo el año.</p>
       </div>
     </div>
   </section>
@@ -506,6 +556,491 @@ const soporteBody = `
   ${cta("","¿No encontraste lo que <span class='grad'>buscabas?</span>","Escribinos directo por WhatsApp — si es de un proyecto activo, mencionanos el nombre de tu marca y vamos al grano.")}
 </main>`;
 
+/* ---------- TÉRMINOS Y CONDICIONES ---------- */
+const terminosBody = `
+<header class="hero hero--sub"><div class="wrap"><div class="hero__copy">
+  <p class="eyebrow">Marco contractual</p>
+  <h1>Términos y <span class="grad">condiciones.</span></h1>
+  <p class="lead">Las reglas del juego, escritas para que se entiendan. Este documento rige el uso de
+  este sitio y del formulario de brief, y establece el marco general de contratación de los servicios
+  y plataformas de Movix Corporation S.R.L. Está redactado conforme al ordenamiento jurídico
+  costarricense.</p>
+  <p class="hero__note">Última actualización: 2 de agosto de 2026 · Versión 1.0</p>
+</div></div></header>
+<main class="wrap">
+
+  <section class="blk reveal"><div class="prose">
+    <h3>1 · Quién presta el servicio</h3>
+    <p><strong>Movix Corporation S.R.L.</strong> ("Movix", "nosotros"), sociedad de responsabilidad
+    limitada domiciliada en San Rafael de Escazú, San José, Costa Rica, es la titular de este sitio y
+    la responsable de la prestación de los servicios descritos en él, sea directamente o a través de
+    sus marcas <strong>Movix Studio</strong>, <strong>Fidelix</strong> y <strong>Petix Care</strong>.
+    Los datos registrales completos y la cédula jurídica se entregan en la propuesta y en todo
+    documento contractual o tributario que se emita a tu nombre.</p>
+    <p>Canal oficial de contacto: WhatsApp
+    <a href="${WA}" rel="noopener" target="_blank">+506 7086-3466</a>.</p>
+
+    <h3>2 · Qué aceptás al usar este sitio</h3>
+    <p>Al navegar este sitio, usar el asistente en línea o completar el formulario de brief, aceptás
+    estos términos y la <a href="privacidad.html">política de privacidad</a>. Si no estás de acuerdo
+    con alguna parte, la vía correcta es no usar el sitio. Estos términos aplican a personas mayores
+    de edad y a representantes con capacidad legal para obligar al negocio que representan.</p>
+
+    <h3>3 · Naturaleza de la información publicada</h3>
+    <p>El contenido de este sitio —descripciones de servicios, niveles de acompañamiento, artículos
+    del blog, respuestas del asistente y materiales descargables— tiene <strong>carácter informativo
+    y no constituye una oferta vinculante</strong>, ni asesoría legal, contable, tributaria, médica,
+    financiera ni de inversión. Ningún precio, porcentaje, plazo o alcance mencionado en el sitio
+    obliga a Movix hasta que conste en una propuesta escrita, firmada o aceptada por medio verificable.</p>
+    <p>Nos reservamos el derecho de modificar, suspender o descontinuar cualquier servicio, nivel,
+    beneficio o contenido, sin que ello genere derecho a indemnización. Los cambios no afectan
+    retroactivamente contratos ya perfeccionados.</p>
+
+    <h3>4 · El brief de marca</h3>
+    <p>El formulario de brief es una <strong>herramienta de diagnóstico previa a la contratación</strong>.
+    Completarlo y enviarlo <strong>no crea relación contractual</strong> ni obliga a ninguna de las
+    dos partes: no nos obliga a prestar el servicio ni te obliga a contratarlo.</p>
+    <ul>
+      <li>Tus respuestas y los archivos que cargués se guardan <strong>únicamente en el almacenamiento
+      local de tu dispositivo</strong> hasta que vos decidás enviarlos. No se transmiten a servidores
+      nuestros ni podemos verlos antes de ese envío.</li>
+      <li>El envío se realiza como mensaje de WhatsApp <strong>desde tu propia cuenta</strong>, por
+      acción tuya. A partir de ese momento aplican también los términos de WhatsApp (Meta).</li>
+      <li>Declarás que la información que enviás es veraz y que tenés facultades para compartirla,
+      incluidos logotipos, imágenes y datos del negocio que representás.</li>
+    </ul>
+
+    <h3>5 · Contratación, propuestas y precios</h3>
+    <p>La relación comercial se perfecciona con la aceptación de una <strong>propuesta escrita</strong>
+    que detalla alcance, entregables, plazos, precio, forma de pago y vigencia. En caso de
+    discrepancia entre este sitio y la propuesta, <strong>prevalece siempre la propuesta</strong>.</p>
+    <ul>
+      <li>Los precios se cotizan por proyecto o por servicio recurrente, según el alcance real. No
+      existe tarifario de plantilla publicado.</li>
+      <li>Salvo indicación expresa, los montos cotizados <strong>no incluyen el Impuesto al Valor
+      Agregado</strong>, que se traslada conforme a la legislación costarricense vigente.</li>
+      <li>Los proyectos ejecutados fuera del área metropolitana pueden incluir una provisión de
+      viáticos y logística, que siempre se detalla en la propuesta antes de aprobarse.</li>
+      <li>Todo trabajo solicitado por fuera del alcance acordado se cotiza aparte y requiere
+      aprobación escrita previa. No facturamos sorpresas.</li>
+    </ul>
+
+    <h3>6 · Pagos, mora y suspensión</h3>
+    <ul>
+      <li>Los servicios recurrentes se facturan por adelantado según la periodicidad pactada; los
+      proyectos, conforme al calendario de hitos de la propuesta.</li>
+      <li>El atraso en el pago faculta a Movix a <strong>suspender la prestación</strong> previo
+      aviso, sin que ello constituya incumplimiento de nuestra parte, y a aplicar los intereses
+      moratorios que permita la ley.</li>
+      <li>Los anticipos destinados a reservar equipo, locación, talento o pauta pueden no ser
+      reembolsables cuando ya se hayan comprometido con terceros. Esa condición se advierte por
+      escrito antes del cobro.</li>
+      <li>La <strong>inversión publicitaria</strong> (el presupuesto que se entrega a Meta, Google,
+      TikTok u otra plataforma) es un rubro distinto de nuestros honorarios y se detalla por separado.
+      No retenemos remanentes de pauta no ejecutada: se reporta y se reasigna o devuelve.</li>
+    </ul>
+
+    <h3>7 · Obligaciones del cliente</h3>
+    <p>La calidad y los plazos del trabajo dependen en parte de vos. Al contratar te comprometés a:</p>
+    <ul>
+      <li>Entregar información, materiales, accesos y aprobaciones dentro de los plazos acordados. Los
+      atrasos de tu lado corren el cronograma, no lo comprimen.</li>
+      <li>Designar una persona con autoridad para aprobar. Las aprobaciones dadas por esa persona se
+      tienen por válidas y definitivas.</li>
+      <li>Garantizar que el material que nos entregás (logos, fotos, música, textos, bases de datos)
+      es de tu propiedad o contás con licencia suficiente para su uso.</li>
+      <li>Cumplir la normativa aplicable a tu actividad —incluidos permisos sanitarios, patentes,
+      pólizas y reglas de publicidad de tu sector— así como la normativa de protección de datos
+      respecto de las bases de contactos que nos compartás.</li>
+    </ul>
+
+    <h3>8 · Accesos y propiedad de las cuentas</h3>
+    <p>Trabajamos <strong>siempre por delegación de permisos, nunca con tus contraseñas</strong>. Vos
+    nos otorgás acceso desde el administrador de tu propia cuenta y podés revocarlo en cualquier
+    momento. La titularidad de perfiles, páginas, píxeles, cuentas publicitarias, dominios y
+    propiedades de analítica <strong>es tuya desde el primer día</strong> y así queda establecido por
+    escrito. Al terminar la relación no retenemos accesos ni condicionamos la entrega de cuentas.</p>
+
+    <h3>9 · Propiedad intelectual</h3>
+    <ul>
+      <li><strong>Lo que producimos para tu marca</strong> —piezas gráficas, video, fotografía, copys y
+      material de campaña aprobado— se te cede en uso pleno para los fines comerciales de tu marca una
+      vez cancelado el precio correspondiente.</li>
+      <li><strong>Lo que es nuestro sigue siendo nuestro:</strong> metodologías, plantillas, código
+      fuente de las plataformas, flujos de automatización, prompts, modelos, componentes reutilizables
+      y el software de Fidelix y Petix Care. Sobre estos se otorga licencia de uso, no propiedad.</li>
+      <li><strong>Archivos de trabajo</strong> (proyectos de edición, capas, sesiones en crudo) no
+      forman parte del entregable salvo pacto expreso y cotizado.</li>
+      <li><strong>Portafolio:</strong> salvo que nos pidás lo contrario por escrito, podemos mostrar el
+      trabajo realizado y mencionar tu marca con fines de portafolio. Basta un mensaje para excluirte.</li>
+      <li><strong>Licencias de terceros</strong> (música, tipografías, imágenes de banco, actores)
+      se rigen por sus propios términos y por el alcance temporal y territorial contratado.</li>
+    </ul>
+
+    <h3>10 · Contenido generado con inteligencia artificial</h3>
+    <p>Parte de la producción puede apoyarse en modelos de inteligencia artificial —generación de
+    imagen y video, asistentes conversacionales, subtitulado, segmentación y análisis—. Sobre esto
+    somos explícitos:</p>
+    <ul>
+      <li>Todo material generado con IA que salga a nombre de tu marca pasa por <strong>revisión y
+      aprobación humana</strong> antes de publicarse. La IA acelera, no decide.</li>
+      <li>El estado legal de las obras generadas por IA está en evolución en varias jurisdicciones;
+      no garantizamos la registrabilidad como obra protegida de piezas puramente generativas.</li>
+      <li>No usamos IA para suplantar personas reales, fabricar testimonios ni simular respaldos que
+      no existan. Cuando una pieza sea sustancialmente generativa y ello pueda inducir a error, se
+      identifica como tal.</li>
+      <li>Los asistentes conversacionales pueden equivocarse. Sus respuestas son orientativas y no
+      sustituyen una confirmación del equipo humano.</li>
+    </ul>
+
+    <h3>11 · Resultados: qué garantizamos y qué no</h3>
+    <p>Nos obligamos a una <strong>obligación de medios, no de resultado</strong>. Garantizamos
+    ejecución profesional, cumplimiento del alcance, transparencia en la medición y reporte honesto —
+    incluso cuando el número no favorece. <strong>No garantizamos</strong> volúmenes específicos de
+    ventas, seguidores, alcance, posiciones en buscadores ni retorno de inversión, porque esos
+    resultados dependen también de tu producto, tu precio, tu operación, tu competencia y de
+    algoritmos de terceros que no controlamos. Cualquier proyección compartida es un escenario
+    estimado, no una promesa.</p>
+
+    <h3>12 · Plataformas de terceros</h3>
+    <p>Buena parte del trabajo se ejecuta sobre plataformas ajenas (Meta, Google, TikTok, WhatsApp,
+    Apple Wallet, Google Wallet, proveedores de hosting y de modelos de IA). Sus cambios de política,
+    interrupciones, rechazos de anuncios, restricciones o cierres de cuenta <strong>no son
+    imputables a Movix</strong>, aunque nos comprometemos a advertirlos, gestionarlos y buscar la
+    mejor alternativa disponible.</p>
+
+    <h3>13 · Confidencialidad</h3>
+    <p>Toda información sensible que compartás —estrategia, precios de costo, márgenes, bases de
+    clientes, planes de lanzamiento— se trata como confidencial y se usa solo para prestarte el
+    servicio. Esta obligación es <strong>recíproca</strong>: también esperamos reserva sobre nuestras
+    metodologías, propuestas y estructura de costos. Se mantiene vigente por dos años después de
+    terminada la relación y no aplica a información pública, a la obtenida lícitamente de un tercero
+    o a la que deba revelarse por orden de autoridad competente.</p>
+
+    <h3>14 · Vigencia y terminación</h3>
+    <ul>
+      <li>Los servicios recurrentes se pactan por el plazo indicado en la propuesta y se renuevan
+      según lo que ahí se establezca.</li>
+      <li>Cualquiera de las partes puede terminar la relación con <strong>preaviso de treinta días
+      naturales</strong>, salvo plazo distinto pactado por escrito.</li>
+      <li>La terminación no exime del pago del trabajo ya ejecutado ni de los compromisos ya
+      adquiridos con terceros por cuenta del proyecto.</li>
+      <li>Movix puede terminar de inmediato y sin responsabilidad ante uso fraudulento, actividad
+      ilícita, incumplimiento grave de pago, o si se nos solicita producir contenido engañoso,
+      discriminatorio o que vulnere derechos de terceros.</li>
+      <li>Al terminar entregamos los materiales aprobados y liberamos accesos en un plazo razonable.</li>
+    </ul>
+
+    <h3>15 · Limitación de responsabilidad</h3>
+    <p>En la máxima medida permitida por la ley costarricense, la responsabilidad total de Movix
+    frente a vos por cualquier reclamo derivado de la relación contractual se limita al
+    <strong>monto efectivamente pagado por el servicio que originó el reclamo durante los tres meses
+    anteriores al hecho</strong>. No respondemos por daños indirectos, lucro cesante, pérdida de
+    datos, de oportunidad o de reputación. Nada de esto limita la responsabilidad por dolo, culpa
+    grave o por aquello que la ley declare irrenunciable.</p>
+
+    <h3>16 · Fuerza mayor</h3>
+    <p>Ninguna parte responde por incumplimientos causados por hechos fuera de su control razonable:
+    desastres naturales, cortes prolongados de electricidad o conectividad, conmoción civil, actos de
+    autoridad, fallas mayores de proveedores de infraestructura o emergencias sanitarias. Los plazos
+    se suspenden mientras dure el evento y se reanudan al cesar.</p>
+
+    <h3>17 · Uso aceptable del sitio</h3>
+    <p>No está permitido intentar vulnerar la seguridad del sitio, ejecutar accesos automatizados
+    masivos, extraer contenido de forma sistemática para reutilizarlo comercialmente, suplantar
+    identidad ni interferir con su funcionamiento. Si encontraste una vulnerabilidad, la vía correcta
+    es <strong>reportarla</strong> por WhatsApp: agradecemos la divulgación responsable y respondemos
+    rápido. Ver nuestra <a href="seguridad.html">postura de seguridad</a>.</p>
+
+    <h3>18 · Datos personales</h3>
+    <p>El tratamiento de datos personales se rige por la <a href="privacidad.html">política de
+    privacidad</a>, conforme a la <strong>Ley N.º 8968</strong> de Protección de la Persona frente al
+    Tratamiento de sus Datos Personales y su reglamento. Este sitio no instala cookies ni
+    rastreadores. Cuando actuemos como encargados de tratamiento sobre bases de datos tuyas, lo
+    haremos únicamente siguiendo tus instrucciones documentadas y aplicando medidas de seguridad
+    equivalentes a las que aplicamos a las nuestras.</p>
+
+    <h3>19 · Comunicaciones</h3>
+    <p>Aceptás que las comunicaciones operativas del proyecto —aprobaciones, entregas, avisos— sean
+    válidas por WhatsApp y correo electrónico a los contactos designados. Los avisos de terminación o
+    reclamo formal deben constar por escrito y ser acusados de recibo.</p>
+
+    <h3>20 · Cambios a estos términos</h3>
+    <p>Podemos actualizar estos términos; la versión vigente será siempre la publicada en esta página
+    con su fecha. Los cambios <strong>no aplican retroactivamente</strong> a contratos ya perfeccionados:
+    esos se rigen por la versión vigente al momento de su aceptación.</p>
+
+    <h3>21 · Ley aplicable y resolución de controversias</h3>
+    <p>Estos términos se rigen por las <strong>leyes de la República de Costa Rica</strong>. Ante
+    cualquier diferencia, las partes se obligan a intentar primero una solución directa y de buena fe
+    dentro de los treinta días naturales siguientes a la notificación del reclamo. De no lograrse,
+    la controversia se someterá a los <strong>tribunales de justicia de San José, Costa Rica</strong>,
+    salvo que ambas partes acuerden por escrito acudir a un centro de resolución alterna de conflictos
+    legalmente habilitado. Si alguna cláusula resultara nula o inaplicable, el resto conserva plena
+    validez.</p>
+
+    <h3>22 · Contacto</h3>
+    <p>Dudas sobre estos términos, solicitudes de datos o reportes de seguridad: WhatsApp
+    <a href="${WA}" rel="noopener" target="_blank">+506 7086-3466</a>. Respondemos en horario hábil
+    de Costa Rica.</p>
+  </div></section>
+
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Lo mismo, <span class="grad">en corto.</span></h2>
+    <p>Este resumen es orientativo y no sustituye el texto completo de arriba — pero si solo vas a
+    leer una parte, que sea esta.</p></div>
+    <ul class="ticklist">
+      <li><b>Tus cuentas son tuyas.</b> Accesos por delegación, nunca por contraseña, y revocables cuando querrás.</li>
+      <li><b>Lo que producimos para tu marca es tuyo</b> una vez pagado. Nuestras metodologías y nuestro software siguen siendo nuestros.</li>
+      <li><b>El brief no te obliga a nada</b> y se queda en tu dispositivo hasta que vos lo enviés.</li>
+      <li><b>Nada se factura por sorpresa:</b> todo fuera de alcance se cotiza y se aprueba antes.</li>
+      <li><b>Garantizamos ejecución, no milagros.</b> Reportamos el número real aunque no favorezca.</li>
+      <li><b>La IA se usa con revisión humana</b> y sin suplantar personas ni fabricar testimonios.</li>
+      <li><b>Se sale con treinta días de preaviso</b> y te entregamos todo lo aprobado.</li>
+      <li><b>Lo que nos contás es confidencial</b>, y esperamos la misma reserva de tu parte.</li>
+    </ul>
+  </section>
+
+  ${cta("","¿Todo claro? <span class='grad'>Dale play.</span>","Si algo de este documento te genera dudas, preguntá antes de firmar nada — preferimos aclararlo hoy que discutirlo después.")}
+</main>`;
+
+/* ---------- ECOSISTEMA ----------
+   Sólo información pública. El material corporativo interno (participación
+   accionaria, identificaciones de los socios, presupuestos, rentabilidad,
+   herramientas contratadas y hoja de ruta) no entra acá ni a ningún archivo
+   de este repo. scripts/check-csp.js lo verifica en cada compilación. */
+const ecosistemaBody = `
+<header class="hero hero--sub"><div class="wrap"><div class="hero__copy">
+  <p class="eyebrow">Movix Corporation S.R.L.</p>
+  <h1>Un ecosistema, <span class="grad">no una agencia suelta.</span></h1>
+  <p class="lead">Movix Studio no trabaja aislado. Es el motor creativo de un ecosistema que también
+  construye software propio: una plataforma de lealtad digital y un marketplace de servicios para
+  mascotas. Concepto, video, pauta, automatización y lealtad en un solo motor interconectado.</p>
+  <div class="hero__cta">
+    <a class="btn btn--send" href="intake/"><span class="l">Empezar mi brief</span>${ARROW}</a>
+    <a class="btn btn--ghost" href="servicios/">Ver los servicios</a>
+  </div>
+  <p class="hero__note">San Rafael de Escazú, Costa Rica · "Tu marca, en movimiento."</p>
+</div></div></header>
+<main class="wrap">
+
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Por qué existe <span class="grad">de esta forma.</span></h2>
+    <p>Entre el marketing de alto nivel y la tecnología que realmente adquiere clientes suele haber una
+    pared: la agencia entrega piezas, el software lo pone otro proveedor, y nadie responde por el
+    resultado completo. Movix se estructuró para que esa pared no exista.</p></div>
+    <div class="cards">
+      <div class="scard">${mark("spark")}<h3>Una sola tesis</h3>
+        <p>Todo lo que producimos —una campaña, un video, un flujo automatizado, un programa de
+        lealtad— responde a la misma pregunta: ¿esto acerca una venta? Si no, no se hace.</p></div>
+      <div class="scard">${mark("layers")}<h3>Tecnología propia</h3>
+        <p>No revendemos software de terceros con una capa de servicio encima. Fidelix y Petix Care son
+        plataformas nuestras, y eso significa que podemos moverlas al ritmo de tu negocio.</p></div>
+      <div class="scard">${mark("ia")}<h3>IA de punta a punta</h3>
+        <p>Modelos generativos en producción de contenido, IA conversacional en atención y calificación
+        de leads, y automatización en la operación interna. Aplicada, no decorativa.</p></div>
+    </div>
+  </section>
+
+  <section class="blk reveal" id="movix-studio">
+    <div class="blk__head"><p class="eyebrow">Marca 01</p><h2>Movix <span class="grad">Studio.</span></h2>
+    <p>El motor creativo, B2B y B2C. Estudio audiovisual-first que pone marcas en movimiento:
+    video vertical de retención, pauta digital y automatización con inteligencia artificial.</p></div>
+    <div class="cards cards--2">
+      <a class="scard" href="servicios/contenido-video.html">${mark("video")}<h3>Producción audiovisual</h3>
+        <p>Video vertical nativo, fotografía comercial y dirección de arte propia. El formato que
+        gobierna la atención hoy, producido para que se sostenga el scroll.</p>
+        <span class="more">Ver el proceso →</span></a>
+      <a class="scard" href="servicios/ia-automatizaciones.html">${mark("ia")}<h3>IA y automatización</h3>
+        <p>Chatbots y agentes conversacionales, calificación automática de leads, subtitulado y
+        segmentación asistida por modelos. Atención que no duerme.</p>
+        <span class="more">Ver el proceso →</span></a>
+    </div>
+    <div class="blk__head blk__head--mt"><h3>Cómo se estructura el trabajo</h3>
+    <p>Cuatro niveles de acompañamiento. La diferencia entre uno y otro no es "más piezas": es cuánta
+    de tu operación comercial pasa a funcionar sola.</p></div>
+    <div class="steps">
+      <div class="step"><span class="step__n">01</span><h3>Growth</h3>
+        <p>El arranque ordenado: calendario de contenido consistente, piezas diseñadas, chatbot de
+        texto, SEO local y campañas iniciales. Para dejar de publicar por impulso.</p></div>
+      <div class="step"><span class="step__n">02</span><h3>Performance</h3>
+        <p>Se suma producción grabada, cobertura de eventos, calificación de leads, subtitulado
+        asistido por IA y atención omnicanal con analítica configurada.</p></div>
+      <div class="step"><span class="step__n">03</span><h3>Ecosystem</h3>
+        <p>Producción de alto volumen con dron y B-roll generado por IA, agentes de voz y segmentación
+        automatizada. La marca deja de depender de que alguien se acuerde de publicar.</p></div>
+      <div class="step"><span class="step__n">04</span><h3>Partner 360</h3>
+        <p>Tercerización total del área: documentales y podcasts en 4K, agentes de cierre, CMS
+        desacoplado y consolidación de datos para decisiones a nivel dirección.</p></div>
+    </div>
+    <p class="fineprint">Cada nivel se cotiza sobre el alcance real de tu marca — no hay tarifario de
+    plantilla. Lo que sí es fijo es qué incluye cada uno y qué no, por escrito, antes de empezar.</p>
+  </section>
+
+  <section class="blk reveal" id="fidelix">
+    <div class="blk__head"><p class="eyebrow">Marca 02</p><h2>Fidelix — lealtad <span class="grad">sin fricción.</span></h2>
+    <p>Plataforma de lealtad <em>white-label</em> para comercios. Sustituye la tarjeta de puntos física
+    por un boleto digital que vive directamente en Apple Wallet y Google Wallet del cliente: sin
+    instalar otra app, sin tarjetas que se pierden, sin sellos que se falsifican.</p></div>
+    <div class="cards">
+      <div class="scard">${mark("wallet")}<h3>En la billetera, no en otra app</h3>
+        <p>El cliente agrega tu tarjeta a la billetera que ya usa. La barrera de instalación —donde se
+        cae la mayoría de los programas de lealtad— simplemente desaparece.</p></div>
+      <div class="scard">${mark("bell")}<h3>Notificaciones que llegan</h3>
+        <p>Promociones y recordatorios directo a la pantalla de bloqueo, sin depender del alcance
+        orgánico de una red social ni del correo que nadie abre.</p></div>
+      <div class="scard">${mark("layers")}<h3>De una sucursal a una cadena</h3>
+        <p>Escala desde un local único hasta operaciones multisucursal con integración al punto de
+        venta. La marca en la tarjeta es la tuya, no la nuestra.</p></div>
+    </div>
+    <div class="hero__cta hero__cta--mt">
+      <a class="btn btn--send" href="${WA}?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20Fidelix" rel="noopener" target="_blank"><span class="l">Consultar por Fidelix</span>${ARROW}</a>
+    </div>
+  </section>
+
+  <section class="blk reveal" id="petix-care">
+    <div class="blk__head"><p class="eyebrow">Marca 03</p><h2>Petix Care — el club <span class="grad">de las mascotas.</span></h2>
+    <p>Marketplace híbrido de servicios veterinarios y de bienestar animal. Para los comercios es
+    tráfico real y agenda llena; para las familias, acceso a atención médica y estética a precios de
+    club, con recompensas por seguir cuidando bien a su mascota.</p></div>
+    <div class="cards cards--2">
+      <div class="scard">${mark("hand")}<h3>Para veterinarias y comercios</h3>
+        <p>Motor de citas, membresías y visibilidad dentro del club. No es un directorio pasivo:
+        la plataforma inyecta demanda hacia tu agenda.</p></div>
+      <div class="scard">${mark("heart")}<h3>Para dueños de mascotas</h3>
+        <p>Suscripción mensual o anual con beneficios en consulta, estética y servicios asociados,
+        con plan familiar para hogares de varias mascotas.</p></div>
+    </div>
+    <div class="hero__cta hero__cta--mt">
+      <a class="btn btn--send" href="${WA}?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20Petix%20Care" rel="noopener" target="_blank"><span class="l">Consultar por Petix Care</span>${ARROW}</a>
+    </div>
+  </section>
+
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Beneficios <span class="grad">cruzados.</span></h2>
+    <p>Estar dentro del ecosistema tiene una ventaja concreta y medible: los clientes de una marca
+    entran a las otras en mejores condiciones. No es un programa de puntos — son descuentos reales
+    sobre facturación.</p></div>
+    <ul class="ticklist">
+      <li><b>De Movix Studio hacia las plataformas</b> — si trabajás con el estudio, entrás a Fidelix o Petix Care con <em>30% de descuento durante los primeros tres meses</em>.</li>
+      <li><b>De las plataformas hacia el estudio</b> — si ya usás Fidelix o Petix Care, tu segundo mes de servicios con Movix Studio lleva descuento según tu plan.</li>
+      <li><b>Por referir</b> — el comercio que trae a un colega asegura descuento en su propia facturación, y el referido entra con beneficio adicional. Ganan los dos, no solo quien refiere.</li>
+      <li><b>Un solo interlocutor</b> — contenido, pauta, lealtad y automatización responden al mismo equipo. Nadie se pasa la bola entre proveedores cuando algo falla.</li>
+    </ul>
+    <p class="fineprint">Los porcentajes y las condiciones vigentes se confirman por escrito en tu
+    propuesta antes de contratar. Ver <a href="terminos.html">términos y condiciones</a>.</p>
+  </section>
+
+  <section class="blk reveal">
+    <div class="blk__head"><h2>El retorno <span class="grad">que no se factura.</span></h2>
+    <p>Movix es un ecosistema diverso y sin juicios. La inclusión no es una obra de caridad para
+    nosotros: es nuestra mayor fuerza creativa y una ventaja de mercado real.</p></div>
+    <div class="cards">
+      <div class="scard">${mark("pride")}<h3>Con orgullo, siempre</h3>
+        <p>El play arcoíris no es una campaña de junio que se guarda en julio: es una variante
+        permanente de la marca, y con ella patrocinamos eventos culturales e iniciativas de derechos
+        humanos durante todo el año.</p></div>
+      <div class="scard">${mark("hand")}<h3>Talento donde nadie busca</h3>
+        <p>Programas de reclutamiento de perfiles disruptivos provenientes de zonas vulnerables. El
+        talento está repartido parejo; las oportunidades no.</p></div>
+      <div class="scard">${mark("spark")}<h3>Recursos liberados</h3>
+        <p>Publicamos plantillas, guías y recursos gratuitos para pymes con presupuesto corto.
+        Democratizar el marketing también mueve el mercado en el que trabajamos.</p></div>
+    </div>
+  </section>
+
+  ${cta("","¿Con cuál de las tres <span class='grad'>empezamos?</span>","Contanos qué necesita tu negocio y te decimos honestamente cuál del ecosistema te sirve — aunque sea ninguna todavía.")}
+</main>`;
+
+/* ---------- INTAKE ----------
+   El formulario por industria. Comparte brandbar, footer, tokens, tipografía,
+   botones y fondo animado con el resto del sitio; su capa propia vive en
+   assets/intake.css y assets/intake.js. */
+const intakeBody = `
+<div id="catview">
+  <div class="wrap hero">
+    <div class="hero__copy">
+      <nav class="crumbs" aria-label="Ruta"><a href="../">Movix Studio</a><span aria-hidden="true">/</span><span aria-current="page">Brief de marca</span></nav>
+      <p class="eyebrow">Un formulario. Todas las industrias.</p>
+      <h1 class="hero__title">Dale play a <span class="grad">tu marca.</span><span class="caret" aria-hidden="true"></span></h1>
+      <p class="hero__lead">Elegí tu categoría y arrancá. El formulario se ajusta al instante con los campos que
+         tu industria realmente necesita — nada genérico, nada de más. Son unos 15 minutos, se guarda solo
+         en tu dispositivo y podés retomarlo cuando querrás.</p>
+    </div>
+    <div class="hero__deco" id="heroDeco" aria-hidden="true">
+      <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
+      <span class="playbig"><svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7Z" fill="currentColor"/></svg></span>
+      <canvas class="play3d" id="play3d"></canvas>
+    </div>
+  </div>
+
+  <div class="ticker" aria-hidden="true"><div class="ticker__track" id="tickerTrack"></div></div>
+
+  <div class="wrap">
+    <p class="catgrid__label">Elegí tu categoría</p>
+    <div class="catgrid" id="catgrid" role="list"></div>
+
+    <div class="howto">
+      <div class="howto__i"><span class="howto__n">1</span><span>Elegís tu <b>categoría</b> y le das play</span></div>
+      <div class="howto__i"><span class="howto__n">2</span><span>Llenás lo que aplica, <b>a tu ritmo</b></span></div>
+      <div class="howto__i"><span class="howto__n">3</span><span>Lo enviás a Movix Studio <b>por WhatsApp</b></span></div>
+    </div>
+
+    <div class="intakenote">
+      <p><b>¿Preferís hablar antes de llenar nada?</b> Es válido. Escribinos por
+      <a href="${WA}?text=Hola%20Movix%20Studio%2C%20quiero%20info" rel="noopener" target="_blank">WhatsApp</a>,
+      mirá <a href="../servicios/">qué hacemos y cómo</a>, o abrí el
+      <a href="#" data-open-chat>asistente</a> — responde al instante.</p>
+    </div>
+  </div>
+</div>
+
+<div id="formview">
+  <div class="wrap">
+    <button class="backlink" id="backlink" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5 8 12l7 7"/></svg>
+      Cambiar categoría
+    </button>
+    <div class="formhero">
+      <span class="formhero__badge">
+        <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span id="fh-badge">Reproduciendo</span>
+      </span>
+      <h2 id="fh-title">Título</h2>
+      <p id="fh-lead">Descripción.</p>
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><i class="dot req"></i> Obligatorio — sin esto no arrancamos</span>
+      <span><i class="dot imp"></i> Importante — primera semana</span>
+      <span><i class="dot opt"></i> Opcional — suma, no urge</span>
+    </div>
+  </div>
+
+  <nav class="toc" aria-label="Secciones"><div class="row" id="tocRow"></div></nav>
+
+  <main class="wrap formmain" id="formmain"></main>
+
+  <div class="actions">
+    <div class="wrap">
+      <div class="prog">
+        <div class="prog__bar">
+          <div class="prog__fill" id="fill"></div>
+          <div class="prog__thumb" id="thumb"><svg viewBox="0 0 10 10" fill="none"><path d="M2.6 1.6 7.8 5 2.6 8.4Z" fill="#fff"/></svg></div>
+        </div>
+        <div class="prog__txt" id="progtxt">Todavía no le diste play</div>
+      </div>
+      <button class="btn btn--ghost" id="copy" type="button">Copiar todo</button>
+      <button class="btn btn--send" id="wa" type="button">
+        <span class="btn__label">Dale play y enviá a Movix Studio</span>
+        <svg viewBox="0 0 10 10" fill="none"><path d="M2.6 1.6 7.8 5 2.6 8.4Z" fill="#fff"/></svg>
+      </button>
+      <span class="sendnote">Se envía al WhatsApp de Movix Studio · +506 7086-3466</span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>`;
+
 /* ---------- PRIVACIDAD ---------- */
 const privacidadBody = `
 <header class="hero hero--sub"><div class="wrap"><div class="hero__copy">
@@ -520,9 +1055,11 @@ const privacidadBody = `
 <main class="wrap">
   <section class="blk reveal"><div class="prose">
     <h3>01 · Quién es el responsable</h3>
-    <p><strong>Movix Studio</strong>, agencia de marketing con operación en Costa Rica, es el responsable
-    del tratamiento de los datos que decidás compartirnos. Para cualquier tema de datos escribinos por
-    WhatsApp al <a href="${WA}" rel="noopener" target="_blank">+506 7086-3466</a>.</p>
+    <p><strong>Movix Corporation S.R.L.</strong>, sociedad domiciliada en San Rafael de Escazú, San José,
+    Costa Rica, es la responsable del tratamiento de los datos que decidás compartirnos, a través de sus
+    marcas <strong>Movix Studio</strong>, <strong>Fidelix</strong> y <strong>Petix Care</strong>. Para
+    cualquier tema de datos escribinos por WhatsApp al
+    <a href="${WA}" rel="noopener" target="_blank">+506 7086-3466</a>.</p>
 
     <h3>02 · Cookies: no usamos</h3>
     <p>Este sitio <strong>no instala cookies</strong>, ni propias ni de terceros. Tampoco usamos píxeles
@@ -584,7 +1121,12 @@ const privacidadBody = `
     deliberadamente datos de menores; si creés que un menor nos envió información, escribinos y la
     eliminamos.</p>
 
-    <h3>09 · Cambios a esta política</h3>
+    <h3>09 · Relación con los términos y condiciones</h3>
+    <p>Esta política se complementa con los <a href="terminos.html">términos y condiciones</a>, que rigen
+    la contratación de los servicios. Ante cualquier duda sobre el tratamiento de datos, manda la
+    presente política.</p>
+
+    <h3>10 · Cambios a esta política</h3>
     <p>Si esta política cambia, publicaremos la versión nueva en esta misma página con su fecha de
     actualización. Los cambios nunca reducirán retroactivamente la protección de los datos que ya nos
     hayás enviado.</p>
@@ -621,13 +1163,16 @@ const seguridadBody = `
         petición.</p></div>
       <div class="scard">${mark("shield")}<h3>Content Security Policy de denegación por defecto</h3>
         <p>La política arranca en <code>default-src 'none'</code>: nada se carga salvo lo que está
-        explícitamente permitido. Los scripts se autorizan por <strong>hash SHA-256</strong> del
-        contenido exacto, no por dominio — un script inyectado, aunque logre llegar al HTML, no se
-        ejecuta. Sin <em>eval</em>, sin orígenes comodín, sin dependencias de terceros.</p></div>
+        explícitamente permitido. <strong>No existe código en línea</strong>: todo el JavaScript y el
+        CSS vive en archivos propios del sitio, así que un script inyectado en el HTML —aunque logre
+        llegar ahí— simplemente no se ejecuta. Sin <em>eval</em>, sin <em>unsafe-inline</em>, sin
+        orígenes comodín, sin una sola dependencia de terceros.</p></div>
       <div class="scard">${mark("scan")}<h3>Análisis continuo de código</h3>
         <p>Cada cambio pasa por <strong>Snyk Code</strong> (análisis estático de seguridad) y por un
-        verificador propio que recalcula los hashes de la política y falla la compilación si dejan de
-        coincidir con el contenido real. Los resultados se publican en formato <strong>SARIF</strong>
+        verificador propio que revisa página por página que nadie haya reintroducido código en línea,
+        un recurso externo o una directiva debilitada — y falla la compilación si lo encuentra. Ese
+        mismo verificador bloquea la publicación si detecta información corporativa que no debe ser
+        pública. Los resultados de Snyk se publican en formato <strong>SARIF</strong>
         dentro del panel de seguridad del repositorio. Además corre un barrido programado cada semana,
         para detectar vulnerabilidades descubiertas después del despliegue.</p></div>
       <div class="scard">${mark("globe")}<h3>Superficie de ataque mínima por diseño</h3>
@@ -643,7 +1188,7 @@ const seguridadBody = `
     cualquier navegador abriendo las herramientas de desarrollo, pestaña de red, cabeceras de respuesta.</p></div>
     <ul class="ticklist">
       <li><strong>Strict-Transport-Security</strong> — 63 072 000 s, <em>includeSubDomains</em>, <em>preload</em>.</li>
-      <li><strong>Content-Security-Policy</strong> — <em>default-src 'none'</em>; scripts por hash SHA-256; <em>connect-src</em> restringido al propio origen.</li>
+      <li><strong>Content-Security-Policy</strong> — <em>default-src 'none'</em>; <em>script-src</em> y <em>style-src</em> solo <em>'self'</em>, sin <em>unsafe-inline</em> ni <em>eval</em>; <em>connect-src</em> restringido al propio origen.</li>
       <li><strong>X-Frame-Options: DENY</strong> y <strong>frame-ancestors 'none'</strong> — doble barrera contra <em>clickjacking</em>.</li>
       <li><strong>X-Content-Type-Options: nosniff</strong> — impide que el navegador reinterprete un archivo como código.</li>
       <li><strong>Referrer-Policy</strong> — <em>strict-origin-when-cross-origin</em>: no se filtran rutas internas a sitios externos.</li>
@@ -678,7 +1223,7 @@ const seguridadBody = `
 
   <section class="blk reveal">
     <div class="blk__head"><h2>Preguntas <span class="grad">directas.</span></h2></div>
-    <details class="faq"><summary>¿Esto aplica también a los sitios que ustedes construyen?</summary><p>Sí. La misma línea base de seguridad — cabeceras estrictas, política de contenido por hash, cifrado en tránsito y análisis estático en cada despliegue — es la que aplicamos a los sitios que desarrollamos para clientes. No es un extra que se cobra aparte: es el estándar mínimo del estudio.</p></details>
+    <details class="faq"><summary>¿Esto aplica también a los sitios que ustedes construyen?</summary><p>Sí. La misma línea base de seguridad — cabeceras estrictas, política de contenido sin código en línea, cifrado en tránsito y análisis estático en cada despliegue — es la que aplicamos a los sitios que desarrollamos para clientes. No es un extra que se cobra aparte: es el estándar mínimo del estudio.</p></details>
     <details class="faq"><summary>¿Tienen WAF y protección contra denegación de servicio?</summary><p>La plataforma se sirve desde una CDN global con mitigación de tráfico anómalo en el borde. Para marcas con dominio propio y perfil de riesgo alto configuramos además un firewall de aplicación con reglas gestionadas, limitación de tasa y filtrado por reputación de origen. Se define en la propuesta según lo que el proyecto realmente necesite.</p></details>
     <details class="faq"><summary>¿Manejan accesos a mis cuentas de redes o publicidad?</summary><p>Trabajamos siempre por delegación de permisos, nunca con tu contraseña: vos nos das acceso desde el administrador de tu propia cuenta y lo revocás cuando querrás. La propiedad de perfiles, píxeles y cuentas publicitarias es tuya desde el primer día y queda por escrito.</p></details>
     <details class="faq"><summary>¿Cómo puedo verificar lo que dice esta página?</summary><p>Abrí las herramientas de desarrollo del navegador en cualquier página de este sitio, mirá las cabeceras de respuesta y compará. También podés analizar el dominio con cualquier evaluador público de cabeceras de seguridad. Preferimos que lo compruebes a que nos creás.</p></details>
@@ -715,7 +1260,23 @@ const contactoBody = `
     <details class="faq"><summary>¿Cuánto cuestan sus servicios?</summary><p>Cada marca necesita algo distinto, así que no hay tarifario de plantilla. El brief nos permite darte un precio real y a la medida — y siempre sabés exactamente qué incluye.</p></details>
     <details class="faq"><summary>¿Trabajan con negocios fuera de Costa Rica?</summary><p>Sí. La operación es remota por diseño; producimos en Costa Rica y gestionamos marcas de cualquier país de habla hispana.</p></details>
     <details class="faq"><summary>¿Qué tan rápido responden?</summary><p>El asistente y el brief, al instante, a cualquier hora. El equipo humano responde por WhatsApp en horario hábil de Costa Rica — y si llenaste el brief, la primera respuesta llega con propuesta incluida.</p></details>
-    <details class="faq"><summary>¿Cómo manejan mis datos?</summary><p>Con la misma seriedad que este sitio: sin cookies, sin rastreadores, y tu información solo se usa para atenderte. El detalle completo está en la <a href="privacidad.html">política de privacidad</a>.</p></details>
+    <details class="faq"><summary>¿Cómo manejan mis datos?</summary><p>Con la misma seriedad que este sitio: sin cookies, sin rastreadores, y tu información solo se usa para atenderte. El detalle completo está en la <a href="privacidad.html">política de privacidad</a> y en los <a href="terminos.html">términos y condiciones</a>.</p></details>
+    <details class="faq"><summary>¿Con quién estoy contratando exactamente?</summary><p>Con <b>Movix Corporation S.R.L.</b>, sociedad costarricense domiciliada en San Rafael de Escazú. Movix Studio es su marca de servicios creativos; el mismo grupo opera las plataformas Fidelix y Petix Care. El detalle está en <a href="ecosistema.html">el ecosistema</a>.</p></details>
+    <details class="faq"><summary>¿Quién es dueño de mis cuentas y del material?</summary><p>Vos. Trabajamos por delegación de permisos, nunca con tus contraseñas, y la titularidad de perfiles, píxeles y cuentas publicitarias es tuya desde el primer día. El material aprobado se te cede para uso pleno de tu marca. Está por escrito en los <a href="terminos.html">términos</a>.</p></details>
+  </section>
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Dónde <span class="grad">estamos.</span></h2></div>
+    <div class="contactgrid">
+      <div class="ccard"><h3>Movix Corporation S.R.L.</h3>
+        <p>San Rafael de Escazú, San José, Costa Rica.</p>
+        <p>La operación es remota por diseño: producimos en Costa Rica y gestionamos marcas de cualquier país de habla hispana. Las reuniones presenciales se coordinan por agenda.</p></div>
+      <div class="ccard"><h3>Horario de atención</h3>
+        <p>El equipo humano responde por WhatsApp en horario hábil de Costa Rica (GMT-6).</p>
+        <p>El asistente en línea y el brief funcionan 24/7, todos los días del año.</p></div>
+      <div class="ccard"><h3>Temas legales y de datos</h3>
+        <p>Solicitudes de acceso, rectificación o supresión de datos, y reportes de seguridad: por el mismo WhatsApp, y los atendemos directamente.</p>
+        <p><a href="terminos.html">Términos y condiciones</a> · <a href="privacidad.html">Privacidad</a> · <a href="seguridad.html">Seguridad</a></p></div>
+    </div>
   </section>
   ${cta("")}
 </main>`;
@@ -739,7 +1300,12 @@ POSTS.forEach(p=>{
   write(`blog/${p.slug}.html`, page({root:"../", title:`${p.title} — Movix Studio`, desc:p.excerpt, body:postBody(p)}));
 });
 write("soporte.html", page({root:"./", title:"Soporte — Movix Studio", desc:"Asistente 24/7, equipo humano por WhatsApp y la base de conocimiento de Movix Studio.", body:soporteBody}));
+write("ecosistema.html", page({root:"./", title:"Ecosistema — Movix Corporation S.R.L.", desc:"Movix Studio, Fidelix y Petix Care: el motor creativo y las plataformas propias de Movix Corporation S.R.L., Costa Rica.", body:ecosistemaBody}));
+write("terminos.html", page({root:"./", title:"Términos y condiciones — Movix Studio", desc:"Marco contractual de Movix Corporation S.R.L.: alcance, propiedad intelectual, uso de IA, accesos, pagos y ley aplicable en Costa Rica.", body:terminosBody}));
+write("intake/index.html", page({root:"../", title:"Brief de marca — Movix Studio", tag:"Brief de marca",
+  desc:"Contanos tu marca en 15 minutos: el brief se adapta a tu industria y nos llega directo por WhatsApp.",
+  css:["intake.css"], js:["intake.js"], body:intakeBody}));
 write("privacidad.html", page({root:"./", title:"Privacidad y datos — Movix Studio", desc:"Política de privacidad, cookies y datos de Movix Studio: sin cookies, sin rastreadores, conforme a la Ley 8968 de Costa Rica.", body:privacidadBody}));
-write("seguridad.html", page({root:"./", title:"Seguridad — Movix Studio", desc:"Cifrado en tránsito, política de contenido por hash, análisis continuo de código y cero rastreadores. Así está blindada la plataforma de Movix Studio.", body:seguridadBody}));
+write("seguridad.html", page({root:"./", title:"Seguridad — Movix Studio", desc:"Cifrado en tránsito, política de contenido de denegación por defecto, análisis continuo de código y cero rastreadores. Así está blindada la plataforma de Movix Studio.", body:seguridadBody}));
 write("contacto.html", page({root:"./", title:"Contacto — Movix Studio", desc:"WhatsApp directo, brief de marca y soporte en línea 24/7. Hablemos por el canal que prefirás.", body:contactoBody}));
 console.log("Listo.");
