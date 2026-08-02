@@ -1,148 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Privacidad y datos — Movix Studio</title>
-<style>
-  :root{
-    --bg:#0D0D1A;--bg-elev:#15152A;--violet:#7C5CFF;--coral:#FF5B3D;
-    --ink:#F4F2FA;--ink-soft:#A7A2C6;--ink-faint:#6C6890;
-    --line:rgba(244,242,250,.12);--line-soft:rgba(244,242,250,.07);
-    --sans:-apple-system,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
-    font-size:16.5px;line-height:1.7;-webkit-font-smoothing:antialiased;
-    background-image:radial-gradient(70% 50% at 80% -10%,rgba(124,92,255,.16),transparent 60%),
-      radial-gradient(55% 40% at 5% 0%,rgba(255,91,61,.10),transparent 60%)}
-  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
-  .brandbar{position:sticky;top:0;padding:16px 24px;background:rgba(13,13,26,.8);
-    backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
-  .brandbar__inner{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-  .logo{display:flex;align-items:center;gap:9px;text-decoration:none}
-  .logo__play{width:22px;height:22px;display:grid;place-items:center;border-radius:7px;
-    background:linear-gradient(135deg,var(--violet),var(--coral))}
-  .logo__play svg{width:9px;height:9px}
-  .logo__word{font-weight:800;font-size:16.5px;color:#fff}
-  .back{font-size:13px;font-weight:600;color:var(--ink-soft);text-decoration:none}
-  .back:hover{color:var(--coral)}
-  main{padding:56px 0 80px}
-  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.16em;
-    text-transform:uppercase;font-weight:700;color:var(--violet);margin:0 0 18px}
-  .eyebrow::before{content:"";width:16px;height:2px;background:var(--coral);border-radius:2px}
-  h1{font-weight:800;font-size:clamp(1.8rem,5vw,2.6rem);letter-spacing:-.02em;line-height:1.08;margin:0 0 10px}
-  .updated{color:var(--ink-faint);font-size:13px;margin:0 0 40px}
-  h2{font-weight:800;font-size:1.25rem;letter-spacing:-.01em;margin:44px 0 12px}
-  h2 span{color:var(--coral);font-variant-numeric:tabular-nums;margin-right:10px}
-  p,li{color:var(--ink-soft);font-size:15.5px}
-  strong{color:var(--ink)}
-  ul{padding-left:22px;margin:12px 0}
-  li{margin:7px 0}
-  .card{background:var(--bg-elev);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:16px 0}
-  .card p{margin:6px 0}
-  a{color:var(--violet)}
-  a:hover{color:var(--coral)}
-  footer{border-top:1px solid var(--line-soft);padding:36px 24px 56px;text-align:center;
-    color:var(--ink-faint);font-size:13px}
-  footer a{color:var(--ink-soft);text-decoration:none}
-  footer a:hover{color:var(--coral)}
-</style>
+<meta name="description" content="Política de privacidad, cookies y datos de Movix Studio: sin cookies, sin rastreadores, conforme a la Ley 8968 de Costa Rica.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C5CFF'/%3E%3Cstop offset='1' stop-color='%23FF5B3D'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cpath d='M9.2 6.8v10.4l8.6-5.2z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./assets/site.css">
+</head>
+<body data-root="./">
+<canvas id="lava" aria-hidden="true"></canvas>
+<div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><div class="aurora__grid"></div></div>
+<div class="embers" id="embers" aria-hidden="true"></div>
+<div class="brandbar"><div class="brandbar__inner">
+    <a class="logo" href="./" aria-label="Movix Studio">
+      <span class="logo__play"><svg viewBox="0 0 10 10" fill="none"><path d="M2 1.2 8.4 5 2 8.8Z" fill="#fff"/></svg></span><span class="logo__word">Movix Studio</span></a>
+    <nav aria-label="Secciones del sitio">
+      <a href="./servicios/">Servicios</a>
+      <a href="./nosotros.html">Nosotros</a>
+      <a href="./blog/">Blog</a>
+      <a href="./soporte.html">Soporte</a>
+      <a href="./contacto.html">Contacto</a>
+    </nav>
+    <a class="btn btn--send" href="./intake/"><span class="l">Dale play</span><svg viewBox="0 0 10 10" fill="none"><path d="M2.6 1.6 7.8 5 2.6 8.4Z" fill="#fff"/></svg></a>
+  </div></div>
 
-<div class="brandbar">
-  <div class="brandbar__inner">
-    <a class="logo" href="index.html" aria-label="Movix Studio">
-      <span class="logo__play"><svg viewBox="0 0 10 10" fill="none"><path d="M2 1.2 8.4 5 2 8.8Z" fill="#fff"/></svg></span>
-      <span class="logo__word">Movix Studio</span>
-    </a>
-    <a class="back" href="index.html">← Volver al sitio</a>
-  </div>
-</div>
-
-<main class="wrap">
+<header class="hero hero--sub"><div class="wrap"><div class="hero__copy">
   <p class="eyebrow">Transparencia total</p>
-  <h1>Política de privacidad, cookies y datos</h1>
-  <p class="updated">Última actualización: 28 de julio de 2026</p>
+  <h1>Política de privacidad, <span class="grad">cookies y datos.</span></h1>
+  <p class="lead">Diseñamos este sitio con un principio simple: recolectar lo mínimo posible y que vos
+  tengás el control. Acá está, sin letra pequeña, qué información se maneja y qué derechos tenés sobre
+  ella conforme a la Ley N.º 8968 de Protección de la Persona frente al Tratamiento de sus Datos
+  Personales de Costa Rica y su reglamento.</p>
+  <p class="hero__note">Última actualización: 2 de agosto de 2026</p>
+</div></div></header>
+<main class="wrap">
+  <section class="blk reveal"><div class="prose">
+    <h3>01 · Quién es el responsable</h3>
+    <p><strong>Movix Studio</strong>, agencia de marketing con operación en Costa Rica, es el responsable
+    del tratamiento de los datos que decidás compartirnos. Para cualquier tema de datos escribinos por
+    WhatsApp al <a href="https://wa.me/50670863466" rel="noopener" target="_blank">+506 7086-3466</a>.</p>
 
-  <p>En Movix Studio diseñamos este sitio con un principio simple: <strong>recolectar lo mínimo
-  posible y que vos tengás el control</strong>. Esta política explica, sin letra pequeña, qué
-  información se maneja cuando usás nuestro sitio y nuestro formulario de intake, y qué derechos
-  tenés sobre ella conforme a la <strong>Ley N.º 8968 de Protección de la Persona frente al
-  Tratamiento de sus Datos Personales</strong> de Costa Rica y su reglamento.</p>
+    <h3>02 · Cookies: no usamos</h3>
+    <p>Este sitio <strong>no instala cookies</strong>, ni propias ni de terceros. Tampoco usamos píxeles
+    de seguimiento, herramientas de analítica, huellas digitales del navegador ni ninguna otra tecnología
+    de rastreo publicitario. Por eso no verás un banner de cookies: no hay nada que aceptar ni rechazar.</p>
 
-  <h2><span>01</span>Quién es el responsable</h2>
-  <p><strong>Movix Studio</strong>, agencia de marketing con operación en Costa Rica, es el
-  responsable del tratamiento de los datos que decidás compartirnos.</p>
-  <div class="card">
-    <p><strong>Contacto para temas de datos:</strong></p>
-    <p>WhatsApp: <a href="https://wa.me/50670863466" rel="noopener">+506 7086-3466</a></p>
-  </div>
+    <h3>03 · Qué datos se manejan y dónde viven</h3>
+    <p><strong>Al navegar el sitio:</strong> no recolectamos ningún dato personal de forma automática.
+    No hay cuentas, no hay registro y no hay formularios que envíen información a servidores nuestros
+    — de hecho, este sitio no tiene servidores propios ni bases de datos.</p>
+    <p><strong>Al llenar el formulario de intake:</strong> lo que escribís, incluido tu logo si lo cargás,
+    se guarda únicamente en el almacenamiento local de tu propio dispositivo, con un solo propósito
+    funcional: que no perdás tu avance si cerrás la página. Esa información no se transmite a ningún
+    servidor y nosotros no podemos verla.</p>
+    <p><strong>Al presionar enviar:</strong> tu brief se convierte en un mensaje de WhatsApp que
+    <strong>vos mismo enviás</strong> desde tu cuenta. Nada sale sin esa acción tuya. A partir de ahí
+    aplica también la política de privacidad de WhatsApp (Meta), como en cualquier conversación de esa
+    plataforma.</p>
+    <p><strong>Cómo borrar tus datos locales:</strong> limpiá los datos de navegación de tu navegador para
+    este sitio, o usá el botón de quitar el logo dentro del formulario. Al ser almacenamiento local, el
+    borrado es inmediato y total.</p>
 
-  <h2><span>02</span>Cookies: no usamos</h2>
-  <p>Este sitio <strong>no instala cookies</strong>, ni propias ni de terceros. Tampoco usamos
-  píxeles de seguimiento, herramientas de analítica (como Google Analytics), huellas digitales
-  del navegador ni ninguna otra tecnología de rastreo publicitario. Por eso no verás un banner
-  de cookies: no hay nada que aceptar ni rechazar.</p>
+    <h3>04 · Para qué usamos lo que nos enviás</h3>
+    <ul>
+      <li>Preparar la reunión de arranque y la propuesta de trabajo para tu marca.</li>
+      <li>Contactarte por los medios que vos mismo indicaste en el brief.</li>
+      <li>Prestarte los servicios que contratés con Movix Studio.</li>
+    </ul>
+    <p>No vendemos, alquilamos ni compartimos tu información con terceros para fines publicitarios. Punto.</p>
 
-  <h2><span>03</span>Qué datos se manejan y dónde viven</h2>
-  <p><strong>Al navegar el sitio:</strong> no recolectamos ningún dato personal de forma
-  automática. No hay cuentas, no hay registro, no hay formularios que envíen información a
-  nuestros servidores — de hecho, este sitio no tiene servidores propios ni bases de datos.</p>
-  <p><strong>Al llenar el formulario de intake:</strong> lo que escribís (incluido tu logo, si lo
-  cargás) se guarda únicamente en el <strong>almacenamiento local de tu propio dispositivo</strong>
-  (localStorage del navegador), con un solo propósito funcional: que no perdás tu avance si cerrás
-  la página. Esa información <strong>no se transmite a ningún servidor</strong> y nosotros no
-  podemos verla.</p>
-  <p><strong>Al presionar "Enviar":</strong> tu brief se convierte en un mensaje de WhatsApp que
-  <strong>vos mismo enviás</strong> desde tu cuenta al WhatsApp de Movix Studio. Nada se envía sin
-  esa acción tuya. A partir de ahí, aplica también la política de privacidad de WhatsApp (Meta),
-  como en cualquier conversación de esa plataforma.</p>
-  <p><strong>Cómo borrar tus datos locales:</strong> limpiá los datos de navegación de tu navegador
-  para este sitio, o usá el botón "Quitar" del logo dentro del formulario. Al ser almacenamiento
-  local, el borrado es inmediato y total.</p>
+    <h3>05 · Terceros que intervienen técnicamente</h3>
+    <ul>
+      <li><strong>Netlify</strong> (hosting y CDN): sirve las páginas de este sitio. Como todo proveedor de
+      infraestructura, puede registrar datos técnicos de conexión —como la dirección IP— en sus bitácoras
+      de servidor, bajo su propia política de privacidad.</li>
+      <li><strong>WhatsApp (Meta)</strong>: interviene únicamente cuando vos decidís enviarnos tu brief o
+      escribirnos, bajo sus propios términos.</li>
+    </ul>
+    <p>Ningún otro tercero recibe información desde este sitio: la política de seguridad de contenido
+    bloquea técnicamente las conexiones a dominios externos.</p>
 
-  <h2><span>04</span>Para qué usamos lo que nos enviás</h2>
-  <ul>
-    <li>Preparar la reunión de arranque y la propuesta de trabajo para tu marca.</li>
-    <li>Contactarte por los medios que vos mismo indicaste en el brief.</li>
-    <li>Prestarte los servicios que contratés con Movix Studio.</li>
-  </ul>
-  <p>No vendemos, alquilamos ni compartimos tu información con terceros para fines publicitarios.
-  Punto.</p>
+    <h3>06 · Tus derechos</h3>
+    <p>Conforme a la Ley 8968 tenés derecho a <strong>acceder</strong> a los datos que nos hayás enviado,
+    <strong>rectificarlos</strong>, <strong>actualizarlos</strong> y pedir su <strong>supresión</strong>,
+    así como a revocar tu consentimiento en cualquier momento. Escribinos por WhatsApp y lo resolvemos
+    directamente, sin formularios eternos ni esperas. También podés acudir a la <strong>Agencia de
+    Protección de Datos de los Habitantes (PRODHAB)</strong> si considerás que tus datos fueron tratados
+    indebidamente.</p>
 
-  <h2><span>05</span>Terceros que intervienen técnicamente</h2>
-  <ul>
-    <li><strong>Netlify</strong> (hosting/CDN): sirve las páginas de este sitio. Como todo
-    proveedor de infraestructura, puede registrar datos técnicos de conexión (como la dirección IP)
-    en sus bitácoras de servidor, bajo su propia política de privacidad.</li>
-    <li><strong>WhatsApp (Meta)</strong>: interviene únicamente cuando vos decidís enviarnos tu
-    brief o escribirnos, bajo sus propios términos.</li>
-  </ul>
-  <p>Ningún otro tercero recibe información desde este sitio: la política de seguridad del sitio
-  (CSP) bloquea técnicamente las conexiones a dominios externos.</p>
+    <h3>07 · Seguridad</h3>
+    <p>El sitio se sirve exclusivamente por HTTPS con HSTS, con una política de contenido estricta que
+    impide la ejecución de scripts inyectados, protección contra clickjacking y una Permissions-Policy
+    que niega el acceso a cámara, micrófono y ubicación. Al no existir base de datos ni cuentas de
+    usuario, la superficie de ataque para robo de datos personales es mínima por diseño. El detalle
+    control por control está en la <a href="seguridad.html">página de seguridad</a>.</p>
 
-  <h2><span>06</span>Tus derechos</h2>
-  <p>Conforme a la Ley 8968, tenés derecho a <strong>acceder</strong> a los datos que nos hayás
-  enviado, <strong>rectificarlos</strong>, <strong>actualizarlos</strong> y pedir su
-  <strong>supresión</strong>, así como a revocar tu consentimiento en cualquier momento.
-  Escribinos por WhatsApp y lo resolvemos directamente — sin formularios eternos ni esperas.
-  También tenés derecho a acudir a la <strong>Agencia de Protección de Datos de los Habitantes
-  (PRODHAB)</strong> si considerás que tus datos fueron tratados indebidamente.</p>
+    <h3>08 · Menores de edad</h3>
+    <p>Nuestros servicios están dirigidos a negocios y personas mayores de edad. No recolectamos
+    deliberadamente datos de menores; si creés que un menor nos envió información, escribinos y la
+    eliminamos.</p>
 
-  <h2><span>07</span>Seguridad</h2>
-  <p>El sitio se sirve exclusivamente por <strong>HTTPS con HSTS</strong> (el navegador rechaza
-  conexiones sin cifrar), con una <strong>Content Security Policy estricta</strong> que impide la
-  ejecución de scripts inyectados, protección contra clickjacking y una Permissions-Policy que
-  niega el acceso a cámara, micrófono y ubicación. Al no existir base de datos ni cuentas de
-  usuario, la superficie de ataque para robo de datos personales es mínima por diseño.</p>
-
-  <h2><span>08</span>Menores de edad</h2>
-  <p>Nuestros servicios están dirigidos a negocios y personas mayores de edad. No recolectamos
-  deliberadamente datos de menores; si creés que un menor nos envió información, escribinos y la
-  eliminamos.</p>
-
-  <h2><span>09</span>Cambios a esta política</h2>
-  <p>Si esta política cambia, publicaremos la versión nueva en esta misma página con su fecha de
-  actualización. Los cambios nunca reducirán retroactivamente la protección de datos que ya nos
-  hayás enviado.</p>
+    <h3>09 · Cambios a esta política</h3>
+    <p>Si esta política cambia, publicaremos la versión nueva en esta misma página con su fecha de
+    actualización. Los cambios nunca reducirán retroactivamente la protección de los datos que ya nos
+    hayás enviado.</p>
+  </div></section>
+  <section class="blk reveal"><div class="cta">
+  <h2>¿Dudas sobre <span class='grad'>tus datos?</span></h2>
+  <p>Escribinos y te respondemos con nombre y apellido — no con un formulario automático.</p>
+  <div class="row">
+    <a class="btn btn--send" href="intake/"><span class="l">Empezar mi brief</span><svg viewBox="0 0 10 10" fill="none"><path d="M2.6 1.6 7.8 5 2.6 8.4Z" fill="#fff"/></svg></a>
+    <a class="btn btn--ghost" href="https://wa.me/50670863466?text=Hola%20Movix%20Studio%2C%20quiero%20info" rel="noopener" target="_blank">Hablemos por WhatsApp</a>
+  </div></div></section>
 </main>
-
-<footer>
-  <p><a href="index.html">Movix Studio</a> · Dale play a tu marca.</p>
-  <p>WhatsApp <a href="https://wa.me/50670863466" rel="noopener">+506 7086-3466</a> · Costa Rica</p>
-</footer>
+<footer><div class="foot">
+    <div>
+      <div class="flog"><span class="logo__play"><svg viewBox="0 0 10 10" fill="none"><path d="M2 1.2 8.4 5 2 8.8Z" fill="#fff"/></svg></span>Movix Studio</div>
+      <p class="tag">Dale play a tu marca.</p>
+      <p>Agencia de marketing en Costa Rica. Estrategia, contenido, pauta e inteligencia artificial aplicada a vender.</p>
+    </div>
+    <div><h4>Servicios</h4><ul><li><a href="./servicios/social-media.html">Social media integral</a></li><li><a href="./servicios/contenido-video.html">Contenido y video</a></li><li><a href="./servicios/pauta-digital.html">Pauta digital</a></li><li><a href="./servicios/branding.html">Branding</a></li><li><a href="./servicios/sitios-web.html">Sitios web</a></li><li><a href="./servicios/ia-automatizaciones.html">IA y automatizaciones</a></li></ul></div>
+    <div><h4>Estudio</h4><ul>
+      <li><a href="./nosotros.html">Nosotros</a></li>
+      <li><a href="./blog/">Blog</a></li>
+      <li><a href="./soporte.html">Soporte</a></li>
+      <li><a href="./contacto.html">Contacto</a></li>
+      <li><a href="./seguridad.html">Seguridad</a></li>
+      <li><a href="./privacidad.html">Privacidad y datos</a></li>
+    </ul></div>
+    <div><h4>Empezar</h4><ul>
+      <li><a href="./intake/">Brief de marca</a></li>
+      <li><a href="https://wa.me/50670863466" rel="noopener" target="_blank">WhatsApp +506 7086-3466</a></li>
+      <li><a href="#" data-open-chat>Soporte en línea</a></li>
+    </ul></div>
+  </div>
+  <div class="foot__legal"><span>© 2026 Movix Studio · Costa Rica</span><span>Sin cookies, sin rastreadores.</span></div>
+  </footer>
+<script src="./assets/site.js" defer></script>
+</body>
+</html>

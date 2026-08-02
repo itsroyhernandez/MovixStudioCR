@@ -1,0 +1,6 @@
+# Snyk policy — Movix Studio
+# Sitio estático sin dependencias en runtime: no hay node_modules servidos al
+# cliente. El análisis relevante es Snyk Code sobre el JavaScript propio.
+version: v1.25.0
+ignore: {}
+patch: {}

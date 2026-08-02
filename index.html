@@ -1,246 +1,66 @@
-<style>
-  /* ============================================================
-     MOVIX STUDIO — Sitio oficial
-     Mismo sistema visual que el intake: navy profundo, violeta y
-     coral, el play como firma, movimiento constante y sutil.
-     ============================================================ */
-  :root{
-    --bg:#0D0D1A;
-    --bg-elev:#15152A;
-    --bg-elev-2:#1C1C36;
-    --violet:#7C5CFF;
-    --violet-deep:#5A3FE0;
-    --violet-soft:rgba(124,92,255,.14);
-    --coral:#FF5B3D;
-    --coral-deep:#E64121;
-    --coral-soft:rgba(255,91,61,.14);
-    --ink:#F4F2FA;
-    --ink-soft:#A7A2C6;
-    --ink-faint:#6C6890;
-    --line:rgba(244,242,250,.12);
-    --line-soft:rgba(244,242,250,.07);
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 20px 44px -22px rgba(90,63,224,.55);
-    --sans:-apple-system,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
-    --maxw:1040px;
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
-    font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
-  a{color:inherit}
-
-  @keyframes pulseRing{0%{transform:scale(.6);opacity:.55}100%{transform:scale(1.7);opacity:0}}
-  @keyframes breathe{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.1)}}
-  @keyframes logoGlow{0%,100%{box-shadow:0 0 0 0 rgba(124,92,255,.55)}50%{box-shadow:0 0 0 5px rgba(255,91,61,0)}}
-  @keyframes logoSpin{0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(10deg) scale(1.1)}}
-  @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  @keyframes blinkCaret{0%,49%{opacity:1}50%,100%{opacity:0}}
-  @keyframes emberRise{0%{transform:translateY(0);opacity:0}10%{opacity:.6}90%{opacity:.2}100%{transform:translateY(-100vh) translateX(var(--dx,20px));opacity:0}}
-  @keyframes shimmerSweep{0%{left:-60%}100%{left:130%}}
-  @keyframes iconNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
-  @keyframes gridDrift{0%{transform:translate(0,0)}100%{transform:translate(34px,34px)}}
-  @keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-3%,4%) scale(1.07)}}
-
-  #lava{position:fixed;inset:0;z-index:-2;width:100vw;height:100vh;pointer-events:none}
-  .aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-  body.lava-on .aurora span{display:none}
-  .aurora span{position:absolute;border-radius:50%;filter:blur(64px);opacity:.3;animation:floatBlob 16s ease-in-out infinite}
-  .aurora .a1{width:48vw;height:48vw;top:-16vw;right:-12vw;background:var(--violet)}
-  .aurora .a2{width:40vw;height:40vw;bottom:-18vw;left:-10vw;background:var(--coral);animation-delay:-8s}
-  .aurora__grid{position:absolute;inset:-10%;opacity:.5;
-    background-image:radial-gradient(circle,rgba(244,242,250,.1) 1px,transparent 1px);
-    background-size:34px 34px;animation:gridDrift 22s linear infinite}
-  .embers{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-  .embers span{position:absolute;bottom:-10px;width:4px;height:4px;border-radius:50%;animation:emberRise linear infinite}
-
-  /* ---------- brandbar ---------- */
-  .brandbar{position:sticky;top:0;z-index:40;padding:16px 24px;background:color-mix(in srgb,var(--bg) 78%,transparent);
-    backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
-  .brandbar__inner{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;gap:26px}
-  .logo{display:flex;align-items:center;gap:9px;text-decoration:none;margin-right:auto}
-  .logo__play{width:22px;height:22px;flex:0 0 auto;display:grid;place-items:center;border-radius:7px;
-    background:linear-gradient(135deg,var(--violet),var(--coral));
-    animation:logoGlow 2.6s ease-in-out infinite,logoSpin 3.4s ease-in-out infinite}
-  .logo__play svg{width:9px;height:9px}
-  .logo__word{font-weight:800;font-size:16.5px;letter-spacing:-.01em;color:#fff;white-space:nowrap}
-  .brandbar nav{display:flex;gap:4px}
-  .brandbar nav a{font-size:13.5px;font-weight:600;color:var(--ink-soft);text-decoration:none;
-    padding:8px 12px;border-radius:99px;transition:.15s}
-  .brandbar nav a:hover{color:var(--ink);background:var(--bg-elev)}
-  @media (max-width:720px){.brandbar nav{display:none}}
-  .btn{font-family:var(--sans);font-weight:700;font-size:14px;border-radius:11px;padding:12px 19px;cursor:pointer;
-    border:1px solid transparent;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;gap:9px;
-    text-decoration:none}
-  .btn:hover{transform:translateY(-1px)}
-  .btn:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
-  .btn--send{position:relative;overflow:hidden;background:linear-gradient(100deg,var(--violet),var(--coral));color:#fff}
-  .btn--send:hover{filter:brightness(1.08)}
-  .btn--send .l,.btn--send svg{position:relative;z-index:1}
-  .btn--send svg{width:11px;height:11px;animation:iconNudge 1.2s ease-in-out infinite}
-  .btn--send::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
-    background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);
-    transform:skewX(-20deg);animation:shimmerSweep 2.6s ease-in-out infinite}
-  .btn--ghost{background:transparent;color:var(--ink);border-color:var(--line)}
-  .btn--ghost:hover{background:var(--bg-elev)}
-  .brandbar .btn{padding:9px 15px;font-size:13px}
-
-  /* ---------- hero ---------- */
-  .hero{position:relative;overflow:hidden;padding:88px 0 40px}
-  .hero .wrap{position:relative;z-index:1}
-  .hero__deco{position:absolute;top:20px;right:-20px;width:300px;height:300px;pointer-events:none;z-index:0}
-  .hero__deco .ring{position:absolute;inset:0;margin:auto;width:70px;height:70px;border:1.5px solid var(--violet);
-    border-radius:50%;opacity:0;animation:pulseRing 3.6s ease-out infinite}
-  .hero__deco .r2{animation-delay:1.2s;border-color:var(--coral)}
-  .hero__deco .r3{animation-delay:2.4s}
-  .hero__deco .play3d{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:210px;height:210px;
-    filter:drop-shadow(0 26px 34px rgba(124,92,255,.42))}
-  @media (max-width:1024px) and (min-width:841px){.hero__deco{width:220px;height:220px;top:10px}.hero__deco .play3d{width:160px;height:160px}}
-  @media (max-width:840px){.hero__deco{display:none}}
-  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
-    font-weight:700;color:var(--violet);margin:0 0 22px}
-  .eyebrow::before{content:"";width:16px;height:2px;background:var(--coral);border-radius:2px}
-  h1{font-weight:800;font-size:clamp(2.3rem,6.4vw,4rem);letter-spacing:-.025em;line-height:1.03;margin:0;
-    max-width:15ch;text-wrap:balance}
-  .grad{background:linear-gradient(100deg,var(--violet) 8%,var(--coral) 92%);
-    -webkit-background-clip:text;background-clip:text;color:transparent}
-  .caret{display:inline-block;width:3px;height:.8em;background:var(--coral);margin-left:8px;border-radius:1px;
-    vertical-align:-.06em;animation:blinkCaret 1s steps(1) infinite}
-  .hero__lead{max-width:52ch;margin:22px 0 0;color:var(--ink-soft);font-size:1.12rem}
-  .hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-  .hero__note{margin-top:14px;font-size:12.5px;color:var(--ink-faint)}
-
-  .ticker{overflow:hidden;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
-    margin:52px 0 0;padding:13px 0}
-  .ticker__track{display:flex;gap:22px;white-space:nowrap;width:max-content;animation:marquee 32s linear infinite}
-  .ticker__track span{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--ink-faint)}
-  .ticker__track span.sep{color:var(--coral)}
-
-  /* ---------- sections ---------- */
-  section.blk{padding:76px 0 10px;scroll-margin-top:70px}
-  .blk__head{max-width:56ch;margin-bottom:36px}
-  .blk__head h2{font-weight:800;font-size:clamp(1.6rem,4vw,2.3rem);letter-spacing:-.02em;line-height:1.1;margin:0 0 12px;text-wrap:balance}
-  .blk__head p{color:var(--ink-soft);margin:0;font-size:15.5px}
-
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;perspective:900px}
-  @media (max-width:860px){.cards{grid-template-columns:repeat(2,1fr)}}
-  @media (max-width:540px){.cards{grid-template-columns:1fr}}
-  .scard{position:relative;background:var(--bg-elev);border:1px solid var(--line);border-radius:16px;
-    padding:22px;overflow:hidden;transform-style:preserve-3d;will-change:transform;
-    transition:border-color .18s,transform .18s,background .18s}
-  .scard::after{content:"";position:absolute;inset:0;border-radius:16px;padding:1px;
-    background:linear-gradient(135deg,var(--violet),var(--coral));opacity:0;
-    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor;mask-composite:exclude;transition:opacity .18s;pointer-events:none}
-  .scard:hover{background:var(--bg-elev-2)}
-  .scard:hover::after{opacity:1}
-  .scard__mark{width:40px;height:40px;border-radius:11px;background:var(--bg-elev-2);display:grid;place-items:center;
-    margin-bottom:15px;color:var(--ink-faint);transition:.18s}
-  .scard:hover .scard__mark{color:var(--coral);background:var(--coral-soft);transform:scale(1.08) rotate(-4deg)}
-  .scard__mark svg{width:20px;height:20px}
-  .scard h3{margin:0 0 7px;font-size:16.5px;font-weight:700;letter-spacing:-.005em}
-  .scard p{margin:0;font-size:13.8px;color:var(--ink-soft);line-height:1.55}
-
-  /* proceso */
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:step}
-  @media (max-width:860px){.steps{grid-template-columns:repeat(2,1fr)}}
-  @media (max-width:540px){.steps{grid-template-columns:1fr}}
-  .step{background:var(--bg-elev);border:1px solid var(--line);border-radius:16px;padding:22px;position:relative}
-  .step__n{font-size:13px;font-weight:800;color:var(--coral);font-variant-numeric:tabular-nums;
-    display:inline-flex;align-items:center;gap:8px;margin-bottom:12px}
-  .step__n::after{content:"";width:18px;height:2px;background:var(--violet);border-radius:2px}
-  .step h3{margin:0 0 7px;font-size:16px;font-weight:700}
-  .step p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.55}
-
-  /* industrias */
-  .inds{display:flex;flex-wrap:wrap;gap:10px}
-  .ind{display:inline-flex;align-items:center;gap:9px;background:var(--bg-elev);border:1px solid var(--line);
-    border-radius:99px;padding:10px 17px;font-size:13.5px;font-weight:600;color:var(--ink-soft);
-    text-decoration:none;transition:.16s}
-  .ind:hover{color:var(--ink);border-color:var(--violet);background:var(--violet-soft);transform:translateY(-2px)}
-  .ind i{width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--coral));flex:0 0 auto}
-
-  /* CTA final */
-  .cta{position:relative;margin:80px 0 0;border:1px solid var(--line);border-radius:22px;overflow:hidden;
-    background:linear-gradient(120deg,rgba(124,92,255,.16),rgba(255,91,61,.13)),var(--bg-elev);
-    padding:56px 30px;text-align:center;box-shadow:var(--shadow)}
-  .cta h2{font-weight:800;font-size:clamp(1.7rem,4.6vw,2.6rem);letter-spacing:-.02em;margin:0 0 12px;text-wrap:balance}
-  .cta p{color:var(--ink-soft);margin:0 auto;max-width:46ch;font-size:15.5px}
-  .cta .row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:28px}
-
-  footer{padding:60px 24px 56px;margin-top:70px;border-top:1px solid var(--line-soft);
-    text-align:center;color:var(--ink-faint);font-size:13px}
-  footer .flog{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin-bottom:8px;color:#fff}
-  footer .flog .logo__play{width:19px;height:19px;border-radius:6px}
-  footer .flog .logo__play svg{width:8px;height:8px}
-  footer .tag{color:var(--ink-soft);font-weight:600;margin:0 0 16px}
-  footer .contact{display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;margin:0 0 18px;font-size:13.5px}
-  footer .contact a{color:var(--ink-soft);text-decoration:none}
-  footer .contact a:hover{color:var(--coral)}
-
-  .reveal{opacity:0;transform:perspective(900px) translateY(20px) rotateX(5deg);transform-origin:50% 0;
-    transition:opacity .6s cubic-bezier(.2,.7,.3,1),transform .6s cubic-bezier(.2,.7,.3,1)}
-  .reveal.in{opacity:1;transform:perspective(900px) translateY(0) rotateX(0)}
-  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
-</style>
-
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Movix Studio — Dale play a tu marca</title>
+<meta name="description" content="Agencia de marketing en Costa Rica: social media, contenido y video, pauta digital, branding, sitios web e IA aplicada a vender.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C5CFF'/%3E%3Cstop offset='1' stop-color='%23FF5B3D'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cpath d='M9.2 6.8v10.4l8.6-5.2z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./assets/site.css">
+</head>
+<body data-root="./">
 <canvas id="lava" aria-hidden="true"></canvas>
 <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><div class="aurora__grid"></div></div>
 <div class="embers" id="embers" aria-hidden="true"></div>
-
-<div class="brandbar">
-  <div class="brandbar__inner">
-    <a class="logo" href="#" aria-label="Movix Studio">
-      <span class="logo__play"><svg viewBox="0 0 10 10" fill="none"><path d="M2 1.2 8.4 5 2 8.8Z" fill="#fff"/></svg></span>
-      <span class="logo__word">Movix Studio</span>
-    </a>
-    <nav aria-label="Secciones">
-      <a href="#servicios">Servicios</a>
-      <a href="#proceso">Proceso</a>
-      <a href="#industrias">Industrias</a>
-      <a href="#contacto">Contacto</a>
+<div class="brandbar"><div class="brandbar__inner">
+    <a class="logo" href="./" aria-label="Movix Studio">
+      <span class="logo__play"><svg viewBox="0 0 10 10" fill="none"><path d="M2 1.2 8.4 5 2 8.8Z" fill="#fff"/></svg></span><span class="logo__word">Movix Studio</span></a>
+    <nav aria-label="Secciones del sitio">
+      <a href="./servicios/">Servicios</a>
+      <a href="./nosotros.html">Nosotros</a>
+      <a href="./blog/">Blog</a>
+      <a href="./soporte.html">Soporte</a>
+      <a href="./contacto.html">Contacto</a>
     </nav>
-    <a class="btn btn--send" href="intake/"><span class="l">Dale play</span>
-      <svg viewBox="0 0 10 10" fill="none"><path d="M2.6 1.6 7.8 5 2.6 8.4Z" fill="#fff"/></svg></a>
-  </div>
-</div>
+    <a class="btn btn--send" href="./intake/"><span class="l">Dale play</span><svg viewBox="0 0 10 10" fill="none"><path d="M2.6 1.6 7.8 5 2.6 8.4Z" fill="#fff"/></svg></a>
+  </div></div>
 
 <header class="hero">
-  <div class="hero__deco" id="heroDeco" aria-hidden="true">
-    <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
-    <canvas class="play3d" id="play3d"></canvas>
-  </div>
   <div class="wrap">
+    <div class="hero__copy">
     <p class="eyebrow">Agencia de marketing · Costa Rica</p>
     <h1>Tu marca, <span class="grad">en movimiento.</span><span class="caret" aria-hidden="true"></span></h1>
-    <p class="hero__lead">Movix Studio lleva tu negocio de estar en redes a vender en redes: estrategia,
-       contenido que detiene el scroll y pauta que se mide en clientes, no en likes.</p>
+    <p class="lead">Movix Studio lleva tu negocio de estar en redes a vender en redes: estrategia, contenido
+       que detiene el scroll, pauta medida en clientes e inteligencia artificial aplicada con criterio.</p>
     <div class="hero__cta">
-      <a class="btn btn--send" href="intake/"><span class="l">Dale play a tu marca</span>
-        <svg viewBox="0 0 10 10" fill="none"><path d="M2.6 1.6 7.8 5 2.6 8.4Z" fill="#fff"/></svg></a>
-      <a class="btn btn--ghost" href="https://wa.me/50670863466?text=Hola%20Movix%20Studio%2C%20quiero%20info" target="_blank" rel="noopener">Hablemos por WhatsApp</a>
+      <a class="btn btn--send" href="intake/"><span class="l">Dale play a tu marca</span><svg viewBox="0 0 10 10" fill="none"><path d="M2.6 1.6 7.8 5 2.6 8.4Z" fill="#fff"/></svg></a>
+      <a class="btn btn--ghost" href="https://wa.me/50670863466?text=Hola%20Movix%20Studio%2C%20quiero%20info" rel="noopener" target="_blank">Hablemos por WhatsApp</a>
     </div>
     <p class="hero__note">El brief se llena en 15 minutos, desde el cel, y nos llega directo por WhatsApp.</p>
+    </div>
+    <div class="hero__deco" aria-hidden="true">
+      <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
+      <canvas class="play3d" id="play3d"></canvas>
+    </div>
   </div>
-  <div class="ticker" aria-hidden="true"><div class="ticker__track" id="tickerTrack"></div></div>
+  <div class="ticker" aria-hidden="true"><div class="ticker__track" id="tickerTrack" data-words="Estrategia,Contenido,Pauta,Branding,Video,Sitios web,Renders IA,Chatbots,Automatización,Datos"></div></div>
 </header>
-
 <main class="wrap">
-
   <section class="blk reveal" id="servicios">
-    <div class="blk__head">
-      <h2>Todo lo que tu marca necesita, <span class="grad">en un solo lugar.</span></h2>
-      <p>Sin malabares entre proveedores: estrategia, producción y crecimiento bajo el mismo techo, hablándose entre sí.</p>
+    <div class="blk__head"><h2>Todo lo que tu marca necesita, <span class="grad">en un solo lugar.</span></h2>
+    <p>Sin malabares entre proveedores: estrategia, producción, crecimiento e IA bajo el mismo techo, hablándose entre sí.</p></div>
+    <div class="cards">
+      <a class="scard" href="servicios/social-media.html"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M12 3.6v16.8M3.6 12h16.8"/></svg></div><h3>Social media integral</h3><p>Estrategia, calendario, publicación y comunidad — tus redes trabajando con intención comercial.</p><span class="more">Cómo lo hacemos →</span></a>
+      <a class="scard" href="servicios/contenido-video.html"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="13" height="12" rx="2.5"/><path d="m16.5 10 4-2.5v9L16.5 14"/></svg></div><h3>Contenido y video</h3><p>Reels, foto y video con dirección de arte — producción que detiene el scroll y suena a tu marca.</p><span class="more">Cómo lo hacemos →</span></a>
+      <a class="scard" href="servicios/pauta-digital.html"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14V10l9-5v14"/><path d="M13 9.5c2.8 0 4.5 1.1 4.5 2.5S15.8 14.5 13 14.5"/></svg></div><h3>Pauta digital</h3><p>Meta, TikTok y Google con presupuesto cuidado como propio — medido en leads y ventas.</p><span class="more">Cómo lo hacemos →</span></a>
+      <a class="scard" href="servicios/branding.html"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="m12 6.5 1.6 3.3 3.6.5-2.6 2.5.6 3.6L12 14.7l-3.2 1.7.6-3.6-2.6-2.5 3.6-.5Z"/></svg></div><h3>Branding</h3><p>Identidad, logo y sistema visual con reglas claras — listo para crecer sin perder consistencia.</p><span class="more">Cómo lo hacemos →</span></a>
+      <a class="scard" href="servicios/sitios-web.html"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8M12 3.6c-4.7 4.7-4.7 12.1 0 16.8M12 3.6c4.7 4.7 4.7 12.1 0 16.8"/></svg></div><h3>Sitios web</h3><p>Páginas rápidas, seguras y hechas para convertir — con formularios que llegan directo a tu WhatsApp.</p><span class="more">Cómo lo hacemos →</span></a>
+      <a class="scard" href="servicios/ia-automatizaciones.html"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="14" height="11" rx="3"/><circle cx="9.5" cy="12.5" r="1.3"/><circle cx="14.5" cy="12.5" r="1.3"/><path d="M12 7V4M8 4h8"/></svg></div><h3>IA y automatizaciones</h3><p>Renders generativos, chatbots y flujos automatizados — tecnología de frontera aplicada a vender más.</p><span class="more">Cómo lo hacemos →</span></a>
     </div>
-    <div class="cards" id="svcCards"></div>
   </section>
-
-  <section class="blk reveal" id="proceso">
-    <div class="blk__head">
-      <h2>Así se ve <span class="grad">darle play.</span></h2>
-      <p>Un proceso claro de principio a fin — sabés en qué paso estamos y qué sigue, siempre.</p>
-    </div>
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Así se ve <span class="grad">darle play.</span></h2>
+    <p>Un proceso claro de principio a fin — sabés en qué paso estamos y qué sigue, siempre.</p></div>
     <div class="steps">
       <div class="step"><span class="step__n">01</span><h3>Brief</h3><p>Llenás el intake en 15 minutos: tu marca, tus productos y tus metas. Nos llega directo por WhatsApp.</p></div>
       <div class="step"><span class="step__n">02</span><h3>Estrategia</h3><p>Reunión de arranque con propuesta sobre la mesa: públicos, calendario y promociones para tu industria.</p></div>
@@ -248,275 +68,65 @@
       <div class="step"><span class="step__n">04</span><h3>Crecimiento</h3><p>Reportes que hablan de ventas y leads, no de likes. Se corta lo que no funciona, se duplica lo que sí.</p></div>
     </div>
   </section>
-
-  <section class="blk reveal" id="industrias">
-    <div class="blk__head">
-      <h2>Tu industria ya tiene <span class="grad">su formulario.</span></h2>
-      <p>El intake de Movix Studio se adapta a tu rubro: elegí tu categoría y el brief se arma solo con lo que tu negocio realmente necesita.</p>
-    </div>
-    <div class="inds" id="indChips"></div>
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Tu industria ya tiene <span class="grad">su formulario.</span></h2>
+    <p>El intake de Movix Studio se adapta a tu rubro: elegí tu categoría y el brief se arma solo con lo que tu negocio necesita.</p></div>
+    <div class="inds"><a class="ind" href="intake/"><i></i>Turismo y experiencias</a><a class="ind" href="intake/"><i></i>Restaurantes y gastronomía</a><a class="ind" href="intake/"><i></i>Financiero y seguros</a><a class="ind" href="intake/"><i></i>Tecnología y software</a><a class="ind" href="intake/"><i></i>Salud y bienestar</a><a class="ind" href="intake/"><i></i>Retail y e-commerce</a><a class="ind" href="intake/"><i></i>Bienes raíces</a><a class="ind" href="intake/"><i></i>B2B y servicios profesionales</a><a class="ind" href="intake/"><i></i>Otra categoría</a></div>
   </section>
-
-  <section class="blk reveal" id="contacto">
-    <div class="cta">
-      <h2>¿Listo para darle <span class="grad">play?</span></h2>
-      <p>Contanos de tu marca hoy y llegá a la primera reunión con la estrategia ya empezada.</p>
-      <div class="row">
-        <a class="btn btn--send" href="intake/"><span class="l">Empezar mi brief</span>
-          <svg viewBox="0 0 10 10" fill="none"><path d="M2.6 1.6 7.8 5 2.6 8.4Z" fill="#fff"/></svg></a>
-        <a class="btn btn--ghost" href="https://wa.me/50670863466?text=Hola%20Movix%20Studio%2C%20quiero%20agendar%20una%20llamada" target="_blank" rel="noopener">Agendar una llamada</a>
-      </div>
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Tu marca, <span class="grad">bien resguardada.</span></h2>
+    <p>Cifrado en tránsito con secreto perfecto hacia adelante, política de contenido de denegación por
+    defecto, análisis estático de seguridad en cada despliegue y cero cookies o rastreadores. No es un
+    discurso: se puede verificar desde tu navegador.</p></div>
+    <div class="cards cards--2">
+      <a class="scard" href="seguridad.html"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 5 6.3v5.4c0 4 2.9 7.5 7 8.8 4.1-1.3 7-4.8 7-8.8V6.3Z"/><path d="m9.2 12.2 2 2 3.6-4"/></svg></div><h3>Postura de seguridad</h3>
+        <p>Los doce controles activos en producción, explicados uno por uno y sin humo técnico.</p>
+        <span class="more">Ver cómo está blindado →</span></a>
+      <a class="scard" href="privacidad.html"><div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="9.5" rx="2.6"/><path d="M8.4 10.5V8a3.6 3.6 0 0 1 7.2 0v2.5"/><path d="M12 14.3v2.4"/></svg></div><h3>Privacidad y datos</h3>
+        <p>Qué pasa con lo que nos contás y qué derechos tenés bajo la Ley N.º 8968 de Costa Rica.</p>
+        <span class="more">Leer la política →</span></a>
     </div>
   </section>
-
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Ideas del <span class="grad">estudio.</span></h2>
+    <p>Lo que aprendemos trabajando, escrito sin humo. Estrategia, ventas e inteligencia artificial aplicada.</p></div>
+    <div class="posts">
+      <a class="post" href="blog/likes-no-pagan-planilla.html"><span class="cat">Estrategia</span><h3>Los likes no pagan planilla: las métricas que sí importan</h3><p>Alcance, impresiones y seguidores son el marcador del juego equivocado. Estas son las cifras que miramos nosotros — y las que deberías exigirle a cualquier agencia.</p><span class="date">Julio 2026</span></a>
+      <a class="post" href="blog/whatsapp-canal-de-ventas.html"><span class="cat">Ventas</span><h3>WhatsApp es tu mejor vendedor (si lo tratás como tal)</h3><p>En Costa Rica, el que responde primero vende. Cómo convertir el WhatsApp del negocio en un canal de ventas serio — sin perder el toque humano.</p><span class="date">Julio 2026</span></a>
+      <a class="post" href="blog/renders-ia-catalogos-premium.html"><span class="cat">IA</span><h3>Renders con IA: catálogos premium sin sesión de fotos</h3><p>Los modelos de difusión cambiaron las reglas de la producción visual. Qué son los renders generativos, cuándo valen la pena y cómo se ve el proceso con dirección de arte.</p><span class="date">Julio 2026</span></a>
+    </div>
+  </section>
+  <section class="blk reveal"><div class="cta">
+  <h2>¿Listo para darle <span class="grad">play?</span></h2>
+  <p>Contanos de tu marca hoy y llegá a la primera reunión con la estrategia ya empezada.</p>
+  <div class="row">
+    <a class="btn btn--send" href="intake/"><span class="l">Empezar mi brief</span><svg viewBox="0 0 10 10" fill="none"><path d="M2.6 1.6 7.8 5 2.6 8.4Z" fill="#fff"/></svg></a>
+    <a class="btn btn--ghost" href="https://wa.me/50670863466?text=Hola%20Movix%20Studio%2C%20quiero%20info" rel="noopener" target="_blank">Hablemos por WhatsApp</a>
+  </div></div></section>
 </main>
-
-<footer>
-  <div class="flog"><span class="logo__play"><svg viewBox="0 0 10 10" fill="none"><path d="M2 1.2 8.4 5 2 8.8Z" fill="#fff"/></svg></span>Movix Studio</div>
-  <p class="tag">Dale play a tu marca.</p>
-  <p class="contact">
-    <a href="https://wa.me/50670863466" target="_blank" rel="noopener">WhatsApp +506 7086-3466</a>
-    <span aria-hidden="true">·</span>
-    <a href="intake/">Intake de marca</a>
-    <span aria-hidden="true">·</span>
-    <a href="privacidad.html">Privacidad y datos</a>
-  </p>
-  <p>Movix Studio · Costa Rica · Sin cookies, sin rastreadores.</p>
-</footer>
-
-<script>
-(function(){
-  "use strict";
-
-  /* ---------- lámpara de lava (WebGL metaballs, lentísima) ---------- */
-  (function initLava(){
-    var canvas=document.getElementById("lava");
-    if(!canvas) return;
-    var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var gl=canvas.getContext("webgl",{alpha:true,antialias:false,premultipliedAlpha:true});
-    if(!gl) return;
-    var Q=0.42;
-    function fit(){canvas.width=Math.max(2,innerWidth*Q);canvas.height=Math.max(2,innerHeight*Q);gl.viewport(0,0,canvas.width,canvas.height);}
-    fit();addEventListener("resize",fit);
-    var VS="attribute vec2 aP;void main(){gl_Position=vec4(aP,0.,1.);}";
-    var FS="precision mediump float;uniform vec2 uR;uniform float uT;"+
-      "void main(){vec2 uv=gl_FragCoord.xy/uR;vec2 p=uv;p.x*=uR.x/uR.y;"+
-      "float fv=0.;float fc=0.;"+
-      "for(int i=0;i<7;i++){float fi=float(i);"+
-      "float sp=0.045+0.012*fi;"+
-      "vec2 c=vec2(0.16+0.113*fi+0.15*sin(uT*sp*0.7+fi*2.1),0.5+0.44*sin(uT*sp+fi*1.7));"+
-      "c.x*=uR.x/uR.y;"+
-      "float r=0.11+0.05*sin(fi*3.7+uT*0.05);"+
-      "float d=max(length(p-c),0.001);"+
-      "float f=r*r/(d*d);"+
-      "if(mod(fi,2.)<1.)fv+=f;else fc+=f;}"+
-      "float F=fv+fc;"+
-      "vec3 vio=vec3(0.486,0.361,1.0);vec3 cor=vec3(1.0,0.357,0.239);"+
-      "vec3 col=(vio*fv+cor*fc)/max(F,0.001);"+
-      "float body=smoothstep(0.95,1.7,F);"+
-      "float glow=smoothstep(0.4,1.1,F)*0.16;"+
-      "float a=body*0.30+glow;"+
-      "gl_FragColor=vec4(col*a,a);}";
-    function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o;}
-    var pr=gl.createProgram();
-    gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));
-    gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));
-    gl.linkProgram(pr);
-    if(!gl.getProgramParameter(pr,gl.LINK_STATUS)) return;
-    gl.useProgram(pr);
-    document.body.classList.add("lava-on");
-    var b=gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,b);
-    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
-    var aP=gl.getAttribLocation(pr,"aP");
-    gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,2,gl.FLOAT,false,0,0);
-    var uR=gl.getUniformLocation(pr,"uR"),uT=gl.getUniformLocation(pr,"uT");
-    gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
-    gl.clearColor(0,0,0,0);
-    function draw(ms){
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.uniform2f(uR,canvas.width,canvas.height);
-      gl.uniform1f(uT,ms*0.001);
-      gl.drawArrays(gl.TRIANGLES,0,3);
-      if(!reduced) requestAnimationFrame(draw);
-    }
-    if(reduced) draw(40000); else requestAnimationFrame(draw);
-  })();
-
-  /* ---------- play 3D (prisma WebGL, sigue el cursor) ---------- */
-  (function initPlay3D(){
-    var canvas=document.getElementById("play3d");
-    var deco=document.getElementById("heroDeco");
-    if(!canvas||!deco) return;
-    var reduced=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var gl=canvas.getContext("webgl",{alpha:true,antialias:true});
-    if(!gl){ canvas.remove(); return; }
-    var dpr=Math.min(window.devicePixelRatio||1,2);
-    function fit(){var s=canvas.clientWidth||210;canvas.width=s*dpr;canvas.height=s*dpr;gl.viewport(0,0,canvas.width,canvas.height);}
-    fit();addEventListener("resize",fit);
-    var VS="attribute vec3 aP;attribute vec3 aN;uniform mat4 uMVP;uniform mat4 uM;"+
-      "varying vec3 vN;varying vec3 vP;void main(){vN=mat3(uM[0].xyz,uM[1].xyz,uM[2].xyz)*aN;"+
-      "vP=(uM*vec4(aP,1.)).xyz;gl_Position=uMVP*vec4(aP,1.);}";
-    var FS="precision mediump float;varying vec3 vN;varying vec3 vP;"+
-      "void main(){vec3 N=normalize(vN);"+
-      "vec3 vio=vec3(0.486,0.361,1.0);vec3 cor=vec3(1.0,0.357,0.239);"+
-      "vec3 base=mix(vio,cor,clamp(vP.x*0.55+0.5,0.,1.));"+
-      "vec3 L1=normalize(vec3(-0.5,0.8,0.6));vec3 L2=normalize(vec3(0.7,-0.3,0.5));"+
-      "float d=0.5*max(dot(N,L1),0.)+0.35*max(dot(N,L2),0.);"+
-      "vec3 H=normalize(L1+vec3(0.,0.,1.));float sp=pow(max(dot(N,H),0.),26.)*0.4;"+
-      "gl_FragColor=vec4(base*(0.42+d)+sp,1.0);}";
-    function sh(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
-    var prog=gl.createProgram();
-    gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));
-    gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));
-    gl.linkProgram(prog);
-    if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){ canvas.remove();return; }
-    gl.useProgram(prog);
-    var A=[-0.55,0.75],B=[-0.55,-0.75],C=[0.85,0],D=0.26;
-    var verts=[];
-    function tri(p1,p2,p3){
-      var u=[p2[0]-p1[0],p2[1]-p1[1],p2[2]-p1[2]],v=[p3[0]-p1[0],p3[1]-p1[1],p3[2]-p1[2]];
-      var n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
-      var l=Math.hypot(n[0],n[1],n[2])||1;n=[n[0]/l,n[1]/l,n[2]/l];
-      [p1,p2,p3].forEach(function(p){verts.push(p[0],p[1],p[2],n[0],n[1],n[2]);});
-    }
-    function quad(p,q){
-      var pf=[p[0],p[1],D],pb=[p[0],p[1],-D],qf=[q[0],q[1],D],qb=[q[0],q[1],-D];
-      tri(pf,pb,qb);tri(pf,qb,qf);
-    }
-    tri([A[0],A[1],D],[B[0],B[1],D],[C[0],C[1],D]);
-    tri([A[0],A[1],-D],[C[0],C[1],-D],[B[0],B[1],-D]);
-    quad(A,B);quad(B,C);quad(C,A);
-    var nVerts=verts.length/6;
-    var buf=gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER,buf);
-    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(verts),gl.STATIC_DRAW);
-    var aP=gl.getAttribLocation(prog,"aP"),aN=gl.getAttribLocation(prog,"aN");
-    gl.enableVertexAttribArray(aP);gl.vertexAttribPointer(aP,3,gl.FLOAT,false,24,0);
-    gl.enableVertexAttribArray(aN);gl.vertexAttribPointer(aN,3,gl.FLOAT,false,24,12);
-    var uMVP=gl.getUniformLocation(prog,"uMVP"),uM=gl.getUniformLocation(prog,"uM");
-    gl.enable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);
-    function mul(a,b){
-      var o=new Array(16);
-      for(var r=0;r<4;r++)for(var c=0;c<4;c++){
-        o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];
-      }
-      return o;
-    }
-    function rotY(t){var c=Math.cos(t),s=Math.sin(t);return [c,0,-s,0, 0,1,0,0, s,0,c,0, 0,0,0,1];}
-    function rotX(t){var c=Math.cos(t),s=Math.sin(t);return [1,0,0,0, 0,c,s,0, 0,-s,c,0, 0,0,0,1];}
-    function persp(fov,n,f){
-      var t=1/Math.tan(fov/2),d=1/(n-f);
-      return [t,0,0,0, 0,t,0,0, 0,0,(n+f)*d,-1, 0,0,2*n*f*d,0];
-    }
-    var proj=persp(0.62,0.1,10);
-    var view=[1,0,0,0, 0,1,0,0, 0,0,1,0, 0,-0.02,-3.6,1];
-    var tx=0,ty=0,cx=0,cy=0;
-    if(!("ontouchstart" in window)){
-      window.addEventListener("pointermove",function(e){
-        var r=canvas.getBoundingClientRect();
-        var mx=(e.clientX-(r.left+r.width/2))/window.innerWidth;
-        var my=(e.clientY-(r.top+r.height/2))/window.innerHeight;
-        ty=Math.max(-0.6,Math.min(0.6,mx*1.6));
-        tx=Math.max(-0.45,Math.min(0.45,my*1.3));
-      });
-    }
-    function draw(t){
-      cx+=(tx-cx)*0.06;cy+=(ty-cy)*0.06;
-      var spin=reduced?0.45:Math.sin(t*0.00085)*0.6;
-      var wob=reduced?-0.12:Math.sin(t*0.0011)*0.16;
-      var model=mul(rotX(wob+cx),rotY(spin+cy));
-      gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
-      gl.uniformMatrix4fv(uM,false,new Float32Array(model));
-      gl.uniformMatrix4fv(uMVP,false,new Float32Array(mul(proj,mul(view,model))));
-      gl.drawArrays(gl.TRIANGLES,0,nVerts);
-      if(!reduced) requestAnimationFrame(draw);
-    }
-    if(reduced) draw(0); else requestAnimationFrame(draw);
-  })();
-
-  /* ---------- brasas de fondo ---------- */
-  (function initEmbers(){
-    var wrap=document.getElementById("embers");
-    var colors=["var(--violet)","var(--coral)"];
-    for(var i=0;i<14;i++){
-      var s=document.createElement("span");
-      s.style.left=(Math.random()*100)+"vw";
-      s.style.background=colors[i%2];
-      s.style.setProperty("--dx",((Math.random()*60)-30).toFixed(0)+"px");
-      s.style.animationDuration=(14+Math.random()*14).toFixed(1)+"s";
-      s.style.animationDelay="-"+(Math.random()*20).toFixed(1)+"s";
-      wrap.appendChild(s);
-    }
-  })();
-
-  /* ---------- servicios ---------- */
-  var ICON={
-    social:'<circle cx="12" cy="12" r="8.4"/><path d="M12 3.6v16.8M3.6 12h16.8"/>',
-    video:'<rect x="3.5" y="6" width="13" height="12" rx="2.5"/><path d="m16.5 10 4-2.5v9L16.5 14"/>',
-    ads:'<path d="M4 14V10l9-5v14Z"/><path d="M13 9.5c2.8 0 4.5 1.1 4.5 2.5S15.8 14.5 13 14.5"/>',
-    brand:'<circle cx="12" cy="12" r="8.4"/><path d="m12 6.5 1.6 3.3 3.6.5-2.6 2.5.6 3.6L12 14.7l-3.2 1.7.6-3.6-2.6-2.5 3.6-.5Z"/>',
-    web:'<circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8M12 3.6c-4.7 4.7-4.7 12.1 0 16.8M12 3.6c4.7 4.7 4.7 12.1 0 16.8"/>',
-    wa:'<path d="M12 4a8 8 0 0 0-6.8 12.2L4 20l3.9-1.2A8 8 0 1 0 12 4Z"/><path d="M9.3 9.5c.6 2.4 2.8 4.6 5.2 5.2l1-1.5 2 .9c-.3 1.7-1.7 2.4-3.3 2-3.2-.8-5.5-3.1-6.3-6.3-.4-1.6.3-3 2-3.3l.9 2Z"/>'
-  };
-  var SVCS=[
-    ["social","Social media integral","Estrategia, calendario, publicación y comunidad. Tus redes trabajando todos los días, con intención."],
-    ["video","Contenido y video","Reels, foto y video pensados para tu público — producción que detiene el scroll y suena a tu marca."],
-    ["ads","Pauta digital","Meta, TikTok y Google con tu presupuesto cuidado como propio. Se mide en leads y ventas, no en alcance."],
-    ["brand","Branding","Identidad, logo y sistema visual con reglas claras, listo para crecer sin perder consistencia."],
-    ["web","Sitios web","Páginas rápidas, seguras y hechas para convertir — como esta. Con formularios que llegan directo a tu WhatsApp."],
-    ["wa","WhatsApp y ventas","Flujos de atención, respuestas rápidas y seguimiento para que ningún lead se quede sin contestar."]
-  ];
-  var svcWrap=document.getElementById("svcCards");
-  SVCS.forEach(function(s){
-    var d=document.createElement("div");
-    d.className="scard";
-    d.innerHTML='<div class="scard__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+ICON[s[0]]+'</svg></div>'+
-      '<h3>'+s[1]+'</h3><p>'+s[2]+'</p>';
-    wireTilt(d);
-    svcWrap.appendChild(d);
-  });
-
-  /* ---------- industrias ---------- */
-  var INDS=["Turismo y experiencias","Restaurantes y gastronomía","Financiero y seguros","Tecnología y software",
-    "Salud y bienestar","Retail y e-commerce","Bienes raíces","B2B y servicios profesionales","Otra categoría"];
-  var indWrap=document.getElementById("indChips");
-  INDS.forEach(function(n){
-    var a=document.createElement("a");
-    a.className="ind";a.href="intake/";
-    a.innerHTML="<i></i>"+n;
-    indWrap.appendChild(a);
-  });
-
-  /* ---------- ticker ---------- */
-  var tickerTrack=document.getElementById("tickerTrack");
-  var words=["Estrategia","Contenido","Pauta","Branding","Video","Sitios web","WhatsApp","Datos"];
-  var seq=words.concat(words).concat(words);
-  tickerTrack.innerHTML=seq.map(function(n,i){
-    return "<span>"+n+"</span>"+(i<seq.length-1?'<span class="sep">·</span>':"");
-  }).join("");
-
-  /* ---------- tilt 3D ---------- */
-  function wireTilt(card){
-    if(!window.matchMedia||matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if("ontouchstart" in window) return;
-    card.addEventListener("pointermove",function(e){
-      var r=card.getBoundingClientRect();
-      var px=(e.clientX-r.left)/r.width-0.5;
-      var py=(e.clientY-r.top)/r.height-0.5;
-      card.style.transform="translateY(-2px) rotateX("+(-py*6).toFixed(2)+"deg) rotateY("+(px*8).toFixed(2)+"deg)";
-    });
-    card.addEventListener("pointerleave",function(){card.style.transform="";});
-  }
-
-  /* ---------- reveal on scroll ---------- */
-  (function initReveal(){
-    var els=document.querySelectorAll(".reveal");
-    if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in");});return;}
-    var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(en){ if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target);} });
-    },{threshold:0.12});
-    els.forEach(function(e){io.observe(e);});
-  })();
-})();
-</script>
+<footer><div class="foot">
+    <div>
+      <div class="flog"><span class="logo__play"><svg viewBox="0 0 10 10" fill="none"><path d="M2 1.2 8.4 5 2 8.8Z" fill="#fff"/></svg></span>Movix Studio</div>
+      <p class="tag">Dale play a tu marca.</p>
+      <p>Agencia de marketing en Costa Rica. Estrategia, contenido, pauta e inteligencia artificial aplicada a vender.</p>
+    </div>
+    <div><h4>Servicios</h4><ul><li><a href="./servicios/social-media.html">Social media integral</a></li><li><a href="./servicios/contenido-video.html">Contenido y video</a></li><li><a href="./servicios/pauta-digital.html">Pauta digital</a></li><li><a href="./servicios/branding.html">Branding</a></li><li><a href="./servicios/sitios-web.html">Sitios web</a></li><li><a href="./servicios/ia-automatizaciones.html">IA y automatizaciones</a></li></ul></div>
+    <div><h4>Estudio</h4><ul>
+      <li><a href="./nosotros.html">Nosotros</a></li>
+      <li><a href="./blog/">Blog</a></li>
+      <li><a href="./soporte.html">Soporte</a></li>
+      <li><a href="./contacto.html">Contacto</a></li>
+      <li><a href="./seguridad.html">Seguridad</a></li>
+      <li><a href="./privacidad.html">Privacidad y datos</a></li>
+    </ul></div>
+    <div><h4>Empezar</h4><ul>
+      <li><a href="./intake/">Brief de marca</a></li>
+      <li><a href="https://wa.me/50670863466" rel="noopener" target="_blank">WhatsApp +506 7086-3466</a></li>
+      <li><a href="#" data-open-chat>Soporte en línea</a></li>
+    </ul></div>
+  </div>
+  <div class="foot__legal"><span>© 2026 Movix Studio · Costa Rica</span><span>Sin cookies, sin rastreadores.</span></div>
+  </footer>
+<script src="./assets/site.js" defer></script>
+</body>
+</html>

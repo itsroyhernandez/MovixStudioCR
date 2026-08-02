@@ -1,5 +1,7 @@
 # MovixStudioCR
 
+[![Seguridad](https://github.com/itsroyhernandez/MovixStudioCR/actions/workflows/security.yml/badge.svg)](https://github.com/itsroyhernandez/MovixStudioCR/actions/workflows/security.yml)
+
 Propiedades web de **Movix Studio**. Todo es estático — sin build, sin backend,
 sin base de datos — lo que reduce la superficie de ataque al mínimo por diseño.
 
@@ -7,11 +9,33 @@ sin base de datos — lo que reduce la superficie de ataque al mínimo por dise�
 
 | Ruta | Qué es |
 |---|---|
-| `index.html` | **Sitio oficial** de Movix Studio (hero 3D, servicios, proceso, industrias, contacto). |
+| `index.html` | **Sitio oficial** de Movix Studio (hero 3D, servicios, proceso, industrias, seguridad, blog). |
+| `servicios/` | Índice y una página por servicio, con el proceso paso a paso. |
+| `blog/` | Índice y artículos del estudio. |
+| `nosotros.html` | Historia, principios y el logo diverso animado. |
+| `soporte.html` | Asistente 24/7 y base de conocimiento. |
+| `contacto.html` | Centro de contacto: WhatsApp, brief y asistente. |
+| `seguridad.html` | Postura de seguridad pública: los controles activos, uno por uno. |
 | `privacidad.html` | Política de privacidad, cookies y datos (Ley 8968 de Costa Rica). |
 | `intake/` | **Intake de marca**: el cliente elige su industria, llena el brief y lo envía por WhatsApp. |
+| `build-pages.js` | Generador de todas las páginas del sitio (`node build-pages.js`). |
+| `scripts/check-csp.js` | Verifica que los hashes CSP de `_headers` coincidan con el contenido real. |
+| `.github/workflows/security.yml` | Snyk Code + verificación de CSP en cada push, PR y cada lunes. |
 | `_headers` | Headers de seguridad para todo el sitio (cuando Netlify publica la raíz). |
 | `intake/_headers` | Headers de seguridad solo del intake (config actual de Netlify). |
+
+## Cómo editar el sitio
+
+El contenido vive en `build-pages.js` (arreglos `SERVICES`, `POSTS` y los
+cuerpos de cada página). Después de tocarlo:
+
+```bash
+node build-pages.js      # regenera todas las páginas
+node scripts/check-csp.js  # recalcula y verifica los hashes CSP
+```
+
+Los dos comandos son los mismos que corre CI, así que si pasan localmente,
+pasan en GitHub.
 
 ## Despliegue en Netlify
 
