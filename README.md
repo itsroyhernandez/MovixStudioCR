@@ -34,7 +34,7 @@ sin base de datos — lo que reduce la superficie de ataque al mínimo por dise�
 | `scripts/check-csp.js` | Guardia de CSP, de código en línea y de confidencialidad. |
 | `.github/workflows/security.yml` | Snyk Code + el guardia anterior, en cada push, PR y cada lunes. |
 | `_headers` · `intake/_headers` | Cabeceras de seguridad aplicadas en el CDN de Netlify. |
-| `netlify.toml` | Publica la **raíz** del repo. Tiene prioridad sobre el panel de Netlify. |
+| `netlify.toml` · `intake/netlify.toml` | Publican la **raíz** del repo. Ver la nota de despliegue. |
 
 ## Cómo editar el sitio
 
@@ -62,22 +62,36 @@ pasan en GitHub.
 
 ## Despliegue en Netlify
 
-La configuración vive en **`netlify.toml`**, que tiene prioridad sobre lo que
-diga el panel. No hace falta tocar el dashboard.
+La configuración vive en **`intake/netlify.toml`**, no en la raíz — y esa
+ubicación es deliberada.
+
+Netlify busca `netlify.toml` en la raíz del repositorio **salvo** que el
+proyecto tenga un *base directory* configurado en el panel: en ese caso lo
+busca dentro de esa carpeta. Este proyecto tiene `base = intake/`, así que el
+archivo de la raíz nunca se leía. `publish` se resuelve relativo al base, por
+eso `".."` sube a la raíz del repositorio:
 
 ```toml
 [build]
-  publish = "."
+  publish = ".."
 ```
 
-Resultado: `/` es el sitio oficial, `/intake/` el brief, y el resto de las
-páginas cuelgan de la raíz.
+Se mantiene también un `netlify.toml` en la raíz, para cuando el base directory
+quede vacío.
 
-> **Por qué importa.** Antes el proyecto publicaba solo `intake/`. Con esa
-> configuración el formulario quedaba en la raíz del dominio y sus enlaces al
-> sitio (`../servicios/`, `../nosotros.html`…) apuntaban fuera de lo publicado:
-> daban 404. El intake se veía "desconectado" del sitio aunque en el código sí
-> lo estuviera. `netlify.toml` lo corrige desde el repositorio.
+> **Qué arreglaba esto.** Antes se publicaba solo `intake/`: el formulario
+> quedaba en la raíz del dominio y sus enlaces al sitio (`../servicios/`,
+> `../nosotros.html`…) apuntaban fuera de lo publicado y daban 404. El intake
+> se veía "desconectado" del sitio aunque en el código sí lo estuviera.
+
+Verificado en el preview del PR:
+
+```
+/                  200  Movix Studio — Dale play a tu marca
+/intake/           200  Brief de marca — Movix Studio
+/servicios/        200  Servicios — Movix Studio
+/ecosistema.html   200  Ecosistema — Movix Corporation S.R.L.
+```
 
 Atajos configurados: `/brief` y `/dale-play` redirigen a `/intake/`.
 
