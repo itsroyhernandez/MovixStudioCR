@@ -344,3 +344,53 @@ footer{margin-top:76px;border-top:1px solid var(--line-soft);padding:52px 24px 4
 .pride__txt h3{margin:0 0 10px;font-size:clamp(1.3rem,3vw,1.7rem);font-weight:700;letter-spacing:-.015em}
 .pride__txt p{margin:0;color:var(--ink-soft);font-size:15px;max-width:52ch}
 @media (max-width:560px){.pride{padding:32px 22px;gap:26px}.prideplay{width:120px;height:120px;border-radius:30px}.prideplay svg{width:44px;height:44px}}
+
+/* ---------- testimonios ----------
+   Avatar de monograma en disco degradado: identifica a la persona sin
+   fabricar un rostro. Entrada escalonada por posición, sin estilos en línea
+   (la CSP los prohíbe). */
+.tstis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+@media (max-width:960px){.tstis{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.tstis{grid-template-columns:1fr}}
+.tsti{position:relative;margin:0;padding:24px 22px 20px;border:1px solid var(--line);border-radius:18px;
+  background:var(--bg-elev);overflow:hidden;transition:transform .3s cubic-bezier(.22,1,.36,1),border-color .3s;
+  opacity:0;transform:translateY(18px);animation:tstiIn .7s cubic-bezier(.22,1,.36,1) forwards}
+.tsti:nth-child(2){animation-delay:.09s}
+.tsti:nth-child(3){animation-delay:.18s}
+.tsti:nth-child(4){animation-delay:.27s}
+.tsti:nth-child(5){animation-delay:.36s}
+.tsti:nth-child(6){animation-delay:.45s}
+@keyframes tstiIn{to{opacity:1;transform:none}}
+.tsti::before{content:"";position:absolute;inset:0;border-radius:18px;padding:1px;opacity:0;transition:opacity .3s;
+  background:linear-gradient(130deg,var(--violet),var(--coral));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;pointer-events:none}
+.tsti:hover{transform:translateY(-4px)}
+.tsti:hover::before{opacity:1}
+.tsti__q{margin:0 0 20px;font-size:15.5px;line-height:1.62;color:var(--ink);quotes:"“" "”"}
+.tsti__q::before{content:open-quote;display:block;font-size:38px;line-height:.6;margin-bottom:10px;
+  background:linear-gradient(130deg,var(--violet),var(--coral));-webkit-background-clip:text;
+  background-clip:text;color:transparent}
+.tsti__who{display:flex;align-items:center;gap:11px;padding-top:15px;border-top:1px solid var(--line-soft)}
+.tsti__av{width:38px;height:38px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;
+  font-size:12.5px;font-weight:700;letter-spacing:.02em;color:#fff}
+.tsti__av--0{background:linear-gradient(135deg,#7C5CFF,#FF5B3D)}
+.tsti__av--1{background:linear-gradient(135deg,#5A3FE0,#B14BFF)}
+.tsti__av--2{background:linear-gradient(135deg,#FF5B3D,#FFAF3D)}
+.tsti__av--3{background:linear-gradient(135deg,#33D3A0,#7C5CFF)}
+.tsti__av--4{background:linear-gradient(135deg,#B14BFF,#FF5B3D)}
+.tsti__av--5{background:linear-gradient(135deg,#3DA5FF,#7C5CFF)}
+.tsti__id{display:flex;flex-direction:column;min-width:0;line-height:1.35}
+.tsti__id b{font-size:13.5px;font-weight:600;color:var(--ink)}
+.tsti__id span{font-size:12px;color:var(--ink-faint)}
+.tsti__when{margin-left:auto;flex:0 0 auto;font-size:11.5px;color:var(--ink-faint);white-space:nowrap}
+
+/* ---------- play Pride a escala de héroe ---------- */
+.hero__deco--pride{display:grid;place-items:center}
+.prideplay--xl{width:190px;height:190px;border-radius:34px;
+  box-shadow:0 34px 66px -26px rgba(124,92,255,.6);animation-duration:9s}
+.prideplay--xl svg{width:64px;height:64px}
+@media (max-width:900px){.prideplay--xl{width:140px;height:140px;border-radius:26px}
+  .prideplay--xl svg{width:48px;height:48px}}
+.pride__cta{margin:20px 0 0}
