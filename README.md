@@ -34,6 +34,7 @@ sin base de datos — lo que reduce la superficie de ataque al mínimo por dise�
 | `scripts/check-csp.js` | Guardia de CSP, de código en línea y de confidencialidad. |
 | `.github/workflows/security.yml` | Snyk Code + el guardia anterior, en cada push, PR y cada lunes. |
 | `_headers` · `intake/_headers` | Cabeceras de seguridad aplicadas en el CDN de Netlify. |
+| `netlify.toml` | Publica la **raíz** del repo. Tiene prioridad sobre el panel de Netlify. |
 
 ## Cómo editar el sitio
 
@@ -61,14 +62,24 @@ pasan en GitHub.
 
 ## Despliegue en Netlify
 
-**Configuración recomendada** (sirve el sitio completo):
+La configuración vive en **`netlify.toml`**, que tiene prioridad sobre lo que
+diga el panel. No hace falta tocar el dashboard.
 
-- Branch: `main` · Base directory: *(vacío)* · Build command: *(vacío)* · Publish directory: *(vacío o `/`)*
-- Resultado: `/` → sitio oficial · `/intake/` → formulario · `/privacidad.html` → política.
+```toml
+[build]
+  publish = "."
+```
 
-> Ojo: la configuración actual publica solo `intake/`, con el formulario en la
-> raíz del dominio. Al cambiar a la recomendada, el formulario pasa a vivir en
-> `/intake/` — si ya compartiste el link viejo con alguien, avisale del cambio.
+Resultado: `/` es el sitio oficial, `/intake/` el brief, y el resto de las
+páginas cuelgan de la raíz.
+
+> **Por qué importa.** Antes el proyecto publicaba solo `intake/`. Con esa
+> configuración el formulario quedaba en la raíz del dominio y sus enlaces al
+> sitio (`../servicios/`, `../nosotros.html`…) apuntaban fuera de lo publicado:
+> daban 404. El intake se veía "desconectado" del sitio aunque en el código sí
+> lo estuviera. `netlify.toml` lo corrige desde el repositorio.
+
+Atajos configurados: `/brief` y `/dale-play` redirigen a `/intake/`.
 
 ## Seguridad
 

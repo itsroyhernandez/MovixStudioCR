@@ -1,0 +1,47 @@
+# Configuración de despliegue de Movix Studio.
+#
+# POR QUÉ EXISTE ESTE ARCHIVO
+# El proyecto en Netlify venía configurado para publicar solo la carpeta
+# `intake/`. Con esa configuración el formulario quedaba en la raíz del
+# dominio y sus enlaces al sitio (../servicios/, ../nosotros.html…) apuntaban
+# fuera de lo publicado: daban 404. Por eso el intake se veía "desconectado"
+# del sitio oficial aunque en el código sí lo esté.
+#
+# netlify.toml tiene prioridad sobre la configuración del panel, así que este
+# archivo corrige el despliegue desde el repositorio, sin tocar el dashboard.
+#
+# Resultado:
+#   /                  → sitio oficial de Movix Studio
+#   /intake/           → brief de marca
+#   /ecosistema.html   → Movix Corporation y sus tres marcas
+#   /terminos.html · /privacidad.html · /seguridad.html · /inclusion.html
+
+[build]
+  # Publicar la raíz del repositorio, no una subcarpeta.
+  publish = "."
+  # Sitio estático: no hay nada que compilar en el CDN. Las páginas se
+  # generan localmente con `node build-pages.js` y se comitean ya listas.
+  command = ""
+
+# Quien tenga guardado el enlace viejo del formulario (que vivía en la raíz)
+# aterriza en el sitio oficial, que es mejor destino que un 404. El intake
+# mantiene su propia URL estable en /intake/.
+[[redirects]]
+  from = "/index-intake.html"
+  to = "/intake/"
+  status = 301
+  force = false
+
+# Alias cortos y memorizables para compartir por WhatsApp.
+[[redirects]]
+  from = "/brief"
+  to = "/intake/"
+  status = 301
+
+[[redirects]]
+  from = "/dale-play"
+  to = "/intake/"
+  status = 301
+
+# Las cabeceras de seguridad siguen viviendo en los archivos `_headers`
+# (raíz e intake/), que scripts/check-csp.js verifica en cada compilación.
