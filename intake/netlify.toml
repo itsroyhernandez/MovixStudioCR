@@ -1,0 +1,28 @@
+# Configuración leída por Netlify cuando el proyecto tiene el "base directory"
+# apuntando a intake/.
+#
+# POR QUÉ ESTÁ ACÁ Y NO SOLO EN LA RAÍZ
+# Netlify busca netlify.toml en la raíz del repositorio **salvo** que haya un
+# base directory configurado en el panel: en ese caso lo busca dentro de esa
+# carpeta. Como este proyecto tiene base = intake/, el archivo de la raíz nunca
+# se leía y el sitio seguía publicándose desde intake/ — dejando el formulario
+# en la raíz del dominio y sus enlaces al sitio (../servicios/, ../nosotros.html)
+# apuntando fuera de lo publicado, es decir, 404.
+#
+# `publish` se resuelve relativo al base directory, así que ".." sube a la raíz
+# del repositorio y publica el sitio completo.
+
+[build]
+  publish = ".."
+  command = ""
+
+# Atajos cortos para compartir el brief por WhatsApp.
+[[redirects]]
+  from = "/brief"
+  to = "/intake/"
+  status = 301
+
+[[redirects]]
+  from = "/dale-play"
+  to = "/intake/"
+  status = 301
