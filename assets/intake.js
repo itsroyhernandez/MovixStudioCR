@@ -365,50 +365,137 @@
           Ti("Tu puesto o rol en el negocio","Rol","Dueño, gerente, mercadeo…"),
           Ph("Tu WhatsApp directo","WhatsApp de contacto"),
           T("Tu correo","Correo de contacto"),
+          Ti("¿Quién aprueba finalmente? Nombre y rol","Quien aprueba","Si sos vos, escribí \'yo mismo\'"),
+          To("Mejor horario para llamarte","Mejor horario","Mañana, tarde, después de las 5…"),
           Ti("¿Cuándo querés arrancar?","Inicio deseado","Ya mismo, este mes, en 1–3 meses…"),
           To("¿Cómo conociste a Movix Studio?","Cómo nos conociste","Instagram, referido, Google…")
         ]},
+
       {title:"La marca", num:"02",
-        lead:"Cómo se llama, quién es legalmente y cómo habla.",
+        lead:"Cómo se llama, de dónde viene y cómo habla. Esto define el tono de todo lo que produzcamos.",
         fields:[
           T("Nombre comercial","Nombre comercial","Como querés que la gente lo diga"),
           T("Razón social / nombre legal","Razón social"),
           T("Cédula jurídica o física","Cédula jurídica"),
           Ti("Frase de una línea (tagline)","Tagline"),
           Num("Año de inicio de operaciones","Año de inicio","opt"),
+          To("¿De dónde viene el nombre?","Origen del nombre"),
+          Wr("Contanos la historia del negocio en tres líneas","Historia","imp"),
           Wr("¿Cómo habla la marca?","Tono de voz","imp"),
-          Wr("¿Qué te hace distinto de tu competencia directa?","Diferenciador","imp")
+          Wr("¿Qué te hace distinto de tu competencia directa?","Diferenciador","imp"),
+          Wr("¿Hay algo que la marca NUNCA debería decir o mostrar?","Líneas rojas","opt")
         ]},
-      {title:"Contacto", num:"03",
-        lead:"Los números y correos que van públicos. En los teléfonos, solo escribí los números.",
+
+      {title:"Contacto y canales", num:"03",
+        lead:"Todo lo que va público y todo por donde te pueden buscar. En los teléfonos, solo escribí los números.",
         fields:[
           Ph("WhatsApp de ventas","WhatsApp de ventas"),
           Ph("Segundo número o línea de soporte","Teléfono secundario","imp"),
+          Ph("Teléfono fijo, si tenés","Teléfono fijo","opt"),
           T("Correo principal","Correo principal"),
+          Ti("Correo de facturación","Correo de facturación"),
+          To("Correo de soporte o reclamos","Correo de soporte"),
           T("Dominio web actual o deseado","Dominio"),
-          Ti("¿El dominio ya está comprado? ¿Dónde?","Estado del dominio")
+          Ti("¿El dominio ya está comprado? ¿Dónde?","Estado del dominio"),
+          To("Sitio web actual, si existe","Sitio actual"),
+          To("¿Quién contesta hoy los mensajes y en cuánto tiempo?","Quién responde hoy")
         ]},
-      {title:"Identidad digital y accesos", num:"04",
+
+      {title:"Ubicación y operación", num:"04",
+        lead:"Dónde estás y cómo funcionás. Esto alimenta tu ficha de Google, la pauta por zona y las respuestas del chatbot.",
+        fields:[
+          T("Dirección exacta","Dirección"),
+          Ti("Señas o punto de referencia","Señas","\'200 m norte de…\'"),
+          Ti("Provincia y cantón","Provincia y cantón"),
+          To("Enlace de Google Maps o Waze","Enlace de mapa"),
+          T("Horario de lunes a viernes","Horario entre semana"),
+          Ti("Horario de sábado","Horario sábado"),
+          Ti("Domingos y feriados","Horario domingo y feriados"),
+          To("¿Cuántas sucursales o puntos tenés?","Sucursales"),
+          Ti("Zonas a las que llegás o cubrís","Cobertura"),
+          To("¿Hay parqueo? ¿Es accesible en silla de ruedas?","Parqueo y accesibilidad"),
+          To("¿Hacen entrega a domicilio o retiro en tienda?","Entrega y retiro")
+        ]},
+
+      {title:"Identidad digital y accesos", num:"05",
         lead:"No escribas contraseñas aquí — solo decinos qué existe. Vos quedás siempre como dueño de todo.",
         extra:"logo",
         fields:[
           Soc("Instagram","Instagram"),
           Soc("Facebook","Facebook"),
           SocI("TikTok","TikTok"),
-          Ti("Otras redes","Otras redes","LinkedIn, YouTube…"),
+          To("LinkedIn","LinkedIn"),
+          To("YouTube","YouTube"),
+          Ti("Otras redes o marketplaces","Otras redes","Threads, Pinterest, Amazon…"),
           Ti("Google Business / Maps","Google Business"),
+          To("¿Quién administra hoy esas cuentas?","Quién administra"),
+          To("¿Usás WhatsApp Business o API?","WhatsApp Business"),
           Price("Presupuesto mensual para pauta","Presupuesto de pauta","imp")
         ]},
-      {title:"Público y metas", num:"05",
+
+      {title:"Producto y oferta", num:"06",
+        lead:"Qué vendés exactamente. Sin esto la pauta dispara al aire y el contenido se vuelve decorativo.",
+        fields:[
+          Wr("¿Qué vendés? Describilo como se lo explicarías a un amigo","Qué vendés"),
+          Wr("Tus tres productos o servicios más importantes","Top 3"),
+          Price("Ticket promedio por venta","Ticket promedio","imp"),
+          Ti("Formas de pago que aceptás","Formas de pago","Efectivo, SINPE, tarjeta, transferencia…"),
+          To("¿Trabajás con cuotas, planes o suscripción?","Planes y cuotas"),
+          Ti("Temporada alta y temporada baja","Temporadas"),
+          To("Garantías, devoluciones o políticas que hay que comunicar","Garantías y políticas"),
+          To("¿Qué producto te gustaría vender más de lo que vendés hoy?","Producto a impulsar")
+        ]},
+
+      {title:"Público y metas", num:"07",
         lead:"A quién le hablás y qué tiene que pasar en 90 días para llamarlo éxito.",
         fields:[
           Wr("¿Quién es tu cliente ideal hoy?","Cliente ideal"),
+          Wr("¿Quién NO es tu cliente? A quién preferís no atraer","Quién no es cliente","imp"),
+          Ti("Rango de edad principal","Rango de edad"),
           Ti("Idioma principal de venta","Idioma principal"),
+          To("¿Vendés fuera de Costa Rica? ¿A dónde?","Mercados fuera de CR"),
           Num("Meta numérica del primer trimestre","Meta del trimestre","imp"),
-          Wr("¿Qué tiene que pasar en 90 días para que esto se sienta un éxito?","Meta de 90 días")
+          Wr("¿Qué tiene que pasar en 90 días para que esto se sienta un éxito?","Meta de 90 días"),
+          Ti("¿Qué medís hoy para saber si vas bien?","Qué medís hoy"),
+          To("¿Qué intentaste antes que no funcionó?","Qué no funcionó")
+        ]},
+
+      {title:"Competencia y referencias", num:"08",
+        lead:"Para no parecernos a quien no querés parecerte. Mandanos enlaces si los tenés a mano.",
+        fields:[
+          Wr("Tres competidores directos","Competidores"),
+          Ti("¿Qué hacen bien ellos?","Qué hacen bien"),
+          Ti("¿En qué les ganás?","En qué les ganás"),
+          To("Marcas cuyo estilo te gusta, del rubro que sea","Referencias que te gustan"),
+          To("Marcas que NO querés parecer","Referencias a evitar")
+        ]},
+
+      {title:"Materiales y equipo", num:"09",
+        lead:"Qué existe ya y con qué contamos para producir. Todo lo que tengás nos ahorra tiempo y te ahorra plata.",
+        fields:[
+          Ti("¿Tenés manual de marca o guía de estilo?","Manual de marca"),
+          Ti("¿Tenés fotos propias del producto o del local?","Fotos existentes"),
+          To("¿Tenés video ya grabado?","Video existente"),
+          To("¿Dónde están guardados esos archivos?","Dónde están los archivos","Drive, Dropbox, un disco…"),
+          Ti("¿Quién puede salir en cámara?","Quién sale en cámara","Nombre y rol; o \'nadie, preferimos producto\'"),
+          To("¿Hay alguien del equipo que apoye con contenido?","Apoyo interno"),
+          Ti("¿En cuánto tiempo podés aprobar una pieza?","Tiempo de aprobación","Mismo día, 48 horas…"),
+          To("¿Hay fechas o lanzamientos que no se pueden mover?","Fechas fijas")
+        ]},
+
+      {title:"Legal y facturación", num:"10",
+        lead:"Lo aburrido que evita problemas después. Si algo no aplica a tu negocio, dejalo en blanco.",
+        fields:[
+          Ti("Nombre y cédula para facturar","Datos de facturación"),
+          Ti("¿Emitís factura electrónica?","Factura electrónica"),
+          To("Dirección fiscal, si es distinta a la del local","Dirección fiscal"),
+          To("Permisos o licencias vigentes que valga mencionar","Permisos vigentes","Patente, permiso sanitario, ICT…"),
+          To("¿Tu rubro tiene restricciones de publicidad?","Restricciones del rubro","Salud, financiero, alcohol…"),
+          To("¿Hay algo que por contrato no podés mostrar?","Restricciones contractuales")
         ]}
     ];
   }
+
 
   /* ============================================================
      TICKER — reel continuo de categorías (siempre en movimiento)

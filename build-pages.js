@@ -201,7 +201,6 @@ function brandbar(root, tag){
       <a href="${root}ecosistema.html">Ecosistema</a>
       <a href="${root}nosotros.html">Nosotros</a>
       <a href="${root}blog/">Blog</a>
-      <a href="${root}soporte.html">Soporte</a>
       <a href="${root}contacto.html">Contacto</a>
     </nav>
     <a class="btn btn--send" href="${root}intake/"><span class="l">Dale play</span>${ARROW}</a>
@@ -222,6 +221,7 @@ function footer(root){
       <li><a href="${root}ecosistema.html#fidelix">Fidelix</a></li>
       <li><a href="${root}ecosistema.html#petix-care">Petix Care</a></li>
       <li><a href="${root}nosotros.html">Nosotros</a></li>
+      <li><a href="${root}inclusion.html">Inclusión</a></li>
       <li><a href="${root}blog/">Blog</a></li>
     </ul></div>
     <div><h4>Empezar</h4><ul>
@@ -267,6 +267,60 @@ ${(o.js||[]).map(f=>`<script src="${o.root}assets/${f}" defer></script>`).join("
 </body>
 </html>`;
 }
+/* ---------- TESTIMONIOS ----------
+   Prueba social real. Cada entrada es una cita textual de un cliente que
+   autorizó su publicación, con su nombre, su cargo y su marca.
+
+   Para agregar una:
+     { nombre:"…", cargo:"…", marca:"…", fecha:"2026-07-28", cita:"…" }
+   La fecha va en formato ISO y el sitio la convierte sola a "hace 2 días",
+   "hace 2 meses", etc. al generar las páginas.
+
+   IMPORTANTE — este arreglo va vacío a propósito. No se publican testimonios
+   inventados, ni nombres, cargos o marcas de personas que no dieron su
+   consentimiento: además de engañar a quien lee, contradice los términos y
+   condiciones del propio sitio y la postura publicada en inclusion.html.
+   La sección completa (tarjetas, animación, fechas relativas) ya está
+   construida y aparece sola en el home y en nosotros.html en cuanto haya al
+   menos una entrada real acá. */
+const TESTIMONIOS = [];
+
+/* "hace 2 días", "hace 3 meses" — se calcula al generar, no en el navegador */
+function haceCuanto(iso){
+  const d = Math.max(0, Math.round((Date.now() - new Date(iso + "T12:00:00Z")) / 86400000));
+  if (d <= 0)  return "hoy";
+  if (d === 1) return "ayer";
+  if (d < 7)   return `hace ${d} días`;
+  if (d < 14)  return "hace una semana";
+  if (d < 31)  return `hace ${Math.round(d/7)} semanas`;
+  if (d < 62)  return "hace un mes";
+  if (d < 365) return `hace ${Math.round(d/30)} meses`;
+  if (d < 730) return "hace un año";
+  return `hace ${Math.round(d/365)} años`;
+}
+/* monograma en disco degradado: identifica sin inventar una cara */
+function monograma(nombre){
+  const ini = nombre.trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+  let h = 0; for (const c of nombre) h = (h*31 + c.charCodeAt(0)) % 6;
+  return `<span class="tsti__av tsti__av--${h}" aria-hidden="true">${ini}</span>`;
+}
+function testimonios(titulo, intro){
+  if (!TESTIMONIOS.length) return "";
+  const cards = TESTIMONIOS.map((t,i)=>`
+    <figure class="tsti" data-i="${i%6}">
+      <blockquote class="tsti__q">${t.cita}</blockquote>
+      <figcaption class="tsti__who">
+        ${monograma(t.nombre)}
+        <span class="tsti__id"><b>${t.nombre}</b><span>${t.cargo} · ${t.marca}</span></span>
+        <time class="tsti__when" datetime="${t.fecha}">${haceCuanto(t.fecha)}</time>
+      </figcaption>
+    </figure>`).join("");
+  return `<section class="blk reveal">
+    <div class="blk__head"><h2>${titulo}</h2><p>${intro}</p></div>
+    <div class="tstis">${cards}</div>
+  </section>`;
+}
+
 const cta = (root,h,p) => `<section class="blk reveal"><div class="cta">
   <h2>${h||'¿Listo para darle <span class="grad">play?</span>'}</h2>
   <p>${p||"Contanos de tu marca hoy y llegá a la primera reunión con la estrategia ya empezada."}</p>
@@ -321,6 +375,7 @@ const homeBody = `
     <p>El intake de Movix Studio se adapta a tu rubro: elegí tu categoría y el brief se arma solo con lo que tu negocio necesita.</p></div>
     <div class="inds">${INDUSTRIES.map(n=>`<a class="ind" href="intake/"><i></i>${n}</a>`).join("")}</div>
   </section>
+  ${testimonios("Lo que dicen <span class='grad'>quienes trabajan con nosotros.</span>","Sin recortes convenientes: cada cita es textual y publicada con autorización de quien la dijo.")}
   <section class="blk reveal">
     <div class="blk__head"><h2>Detrás del estudio, <span class="grad">un ecosistema.</span></h2>
     <p>Movix Studio es la marca creativa de Movix Corporation S.R.L. El mismo grupo construye software
@@ -465,6 +520,7 @@ const nosotrosBody = `
         que cambiar quién es para entrar, trabajar o crear. La diversidad no es un mes en el calendario;
         es parte del sistema de marca — <b>con orgullo, siempre</b>. Con esa variante patrocinamos eventos
         culturales e iniciativas de derechos humanos durante todo el año.</p>
+        <p class="pride__cta"><a class="btn btn--ghost" href="inclusion.html">Cómo lo sostenemos, en concreto</a></p>
       </div>
     </div>
   </section>
@@ -478,6 +534,7 @@ const nosotrosBody = `
       <div class="step"><span class="step__n">04</span><h3>Evidencia</h3><p>Reporte mensual orientado a ventas y una regla fija: lo que no funciona se corta ese mismo mes.</p></div>
     </div>
   </section>
+  ${testimonios("En palabras de <span class='grad'>nuestros clientes.</span>","Publicadas con nombre, cargo y marca — porque un testimonio anónimo no vale nada.")}
   ${cta("")}
 </main>`;
 
@@ -529,7 +586,7 @@ const soporteBody = `
     <div class="blk__head"><h2>Tres formas de <span class="grad">resolverlo.</span></h2>
     <p>Elegí según la urgencia y el tipo de consulta. Ninguna requiere registro ni deja datos guardados.</p></div>
     <div class="cards">
-      <div class="scard">${mark("ia")}<h3>Asistente 24/7</h3><p>Responde al instante lo frecuente: servicios, cómo empezar, precios, horarios. Está en el botón flotante de cualquier página del sitio.</p></div>
+      <div class="scard">${mark("ia")}<h3>Asistente 24/7</h3><p>Responde al instante lo frecuente: servicios, cómo empezar, tiempos, alcance. Está en el botón flotante de cualquier página del sitio.</p></div>
       <div class="scard">${mark("wa")}<h3>Equipo humano</h3><p>Para clientes activos y consultas que necesitan criterio. WhatsApp directo en horario hábil de Costa Rica, sin bots de por medio.</p></div>
       <div class="scard">${mark("spark")}<h3>Base de conocimiento</h3><p>Las respuestas a lo que más nos preguntan, escritas completas y sin rodeos. Están acá abajo.</p></div>
     </div>
@@ -554,6 +611,112 @@ const soporteBody = `
     <details class="faq"><summary>¿Hay permanencia mínima?</summary><p>Los términos se definen en la propuesta según el servicio. Nuestra postura es simple: una agencia debería quedarse porque los números lo justifican, no porque un contrato lo obligue.</p></details>
   </section>
   ${cta("","¿No encontraste lo que <span class='grad'>buscabas?</span>","Escribinos directo por WhatsApp — si es de un proyecto activo, mencionanos el nombre de tu marca y vamos al grano.")}
+</main>`;
+
+/* ---------- INCLUSIÓN ----------
+   Criterio: la inclusión se sostiene con compromisos verificables, no con
+   decoración. Por eso la página mezcla la variante Pride permanente con
+   accesibilidad medible, representación en la producción y acceso al talento.
+   Un sitio que se dice inclusivo y no es navegable por teclado, no lo es. */
+const inclusionBody = `
+<header class="hero hero--sub"><div class="wrap"><div class="hero__copy">
+  <p class="eyebrow">Con orgullo, siempre</p>
+  <h1>La inclusión se demuestra, <span class="grad">no se decora.</span></h1>
+  <p class="lead">Es fácil pintar un logo de colores en junio. Es más difícil sostener un estudio donde
+  nadie tiene que editarse para entrar, producir contenido donde la gente se reconozca, y construir
+  sitios que una persona ciega pueda usar sin ayuda. Nosotros elegimos lo segundo — y acá está
+  exactamente en qué consiste.</p>
+</div>
+<div class="hero__deco hero__deco--pride" aria-hidden="true">
+  <div class="prideplay prideplay--xl"><svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7Z" fill="#fff"/></svg></div>
+</div></div></header>
+<main class="wrap">
+
+  <section class="blk reveal">
+    <div class="blk__head"><h2>El play arcoíris <span class="grad">no es de temporada.</span></h2>
+    <p>El play es la firma de Movix. Su variante en el espectro Progress Pride no se activa en junio
+    para guardarse en julio: es una variante permanente del sistema de marca, disponible los doce meses
+    del año. Con ella patrocinamos eventos culturales e iniciativas de derechos humanos.</p></div>
+    <div class="cards cards--2">
+      <div class="scard">${mark("pride")}<h3>Por qué la bandera Progress y no la clásica</h3>
+        <p>La Progress Pride suma las franjas negra y café por las personas racializadas, y celeste,
+        rosa y blanco por las personas trans. Es la versión que representa explícitamente a quienes
+        quedaban fuera de la original. Si el gesto es de inclusión, se hace completo o no se hace.</p></div>
+      <div class="scard">${mark("hand")}<h3>Qué significa en la práctica</h3>
+        <p>Que un cliente puede pedirnos la variante estándar y la tendrá, pero nadie nos va a pedir que
+        escondamos la otra. Y que el equipo no cambia de discurso según quién esté en la sala.</p></div>
+    </div>
+  </section>
+
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Accesibilidad: la parte <span class="grad">que nadie presume.</span></h2>
+    <p>Una marca que se dice inclusiva y publica video sin subtítulos está dejando fuera a una de cada
+    cinco personas. Estos son los estándares que aplicamos a todo lo que producimos — para nosotros y
+    para vos, sin costo adicional y sin que haya que pedirlo.</p></div>
+    <ul class="ticklist">
+      <li><b>Subtítulos en todo el video.</b> No como opción del reproductor: quemados o nativos, siempre. También sirven para quien mira sin sonido, que es la mayoría.</li>
+      <li><b>Contraste verificado.</b> Todo texto cumple o supera el mínimo <em>WCAG AA</em>. Ningún gris elegante que solo se lee en una pantalla nueva.</li>
+      <li><b>Texto alternativo real.</b> Descripciones que dicen qué hay en la imagen, no "imagen1.jpg".</li>
+      <li><b>Navegable por teclado.</b> Todo el sitio se recorre sin mouse, con foco visible en cada elemento.</li>
+      <li><b>Respeta el movimiento reducido.</b> Si tu sistema pide menos animación, la animación se apaga sola. Sin excepciones.</li>
+      <li><b>Lenguaje claro.</b> Se escribe para que se entienda a la primera, no para sonar sofisticado.</li>
+      <li><b>Estructura semántica.</b> Encabezados jerárquicos y regiones marcadas para que un lector de pantalla no se pierda.</li>
+      <li><b>Sin dependencia del color.</b> Ninguna información se transmite solo por color; siempre hay texto o forma que la respalde.</li>
+    </ul>
+    <p class="fineprint">Podés comprobarlo en este mismo sitio: recorrelo con la tecla de tabulación, o
+    activá "reducir movimiento" en tu sistema y volvé a cargarlo.</p>
+  </section>
+
+  <section class="blk reveal">
+    <div class="blk__head"><h2>A quién se ve <span class="grad">en las piezas.</span></h2>
+    <p>La representación no se arregla en la edición: se decide en el casting y en el guion. Es una
+    conversación que tenemos con cada cliente, y una que sabemos sostener con argumentos comerciales
+    además de éticos.</p></div>
+    <div class="steps">
+      <div class="step"><span class="step__n">01</span><h3>Casting con criterio</h3>
+        <p>Buscamos que quien aparece en pantalla se parezca a quien compra. En Costa Rica eso significa
+        más variedad de la que suele mostrar la publicidad local — de edad, de cuerpo, de origen.</p></div>
+      <div class="step"><span class="step__n">02</span><h3>Sin estereotipos de relleno</h3>
+        <p>Incluir a alguien para ocupar una casilla se nota y se castiga. Las personas aparecen con rol
+        y con voz, o no aparecen.</p></div>
+      <div class="step"><span class="step__n">03</span><h3>Consentimiento informado</h3>
+        <p>Cesiones de uso de imagen claras, con alcance y plazo explícitos. Nadie firma sin entender
+        dónde va a salir su cara y por cuánto tiempo.</p></div>
+      <div class="step"><span class="step__n">04</span><h3>Sin rostros fabricados</h3>
+        <p>No generamos personas con inteligencia artificial para simular clientes, testimonios o
+        equipos. Si ves una cara en una pieza nuestra, esa persona existe y dio su permiso.</p></div>
+    </div>
+  </section>
+
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Talento donde <span class="grad">nadie busca.</span></h2>
+    <p>El talento está repartido parejo; las oportunidades no. Movix mantiene abiertos dos frentes que
+    no dependen de que nos convenga comercialmente.</p></div>
+    <div class="cards cards--2">
+      <div class="scard">${mark("spark")}<h3>Reclutamiento fuera del circuito</h3>
+        <p>Buscamos perfiles disruptivos en zonas y comunidades que las agencias no visitan. No pedimos
+        portafolios de escuela cara: pedimos que nos muestren algo que hayan hecho.</p></div>
+      <div class="scard">${mark("doc")}<h3>Recursos liberados</h3>
+        <p>Publicamos plantillas, guías y recursos gratuitos para pymes con presupuesto corto.
+        Democratizar el marketing también mueve el mercado en el que trabajamos.</p></div>
+    </div>
+  </section>
+
+  <section class="blk reveal">
+    <div class="blk__head"><h2>Lo que <span class="grad">no hacemos.</span></h2>
+    <p>Un compromiso sin límites claros no es un compromiso. Estos son los nuestros, y valen tanto para
+    campañas propias como para las de clientes.</p></div>
+    <ul class="ticklist">
+      <li><b>No producimos contenido</b> que denigre a una persona o grupo por su identidad, orientación, origen, edad, discapacidad o creencias.</li>
+      <li><b>No hacemos rainbow-washing:</b> no vendemos campañas de junio a marcas que no sostienen nada el resto del año.</li>
+      <li><b>No fabricamos personas ni testimonios</b> con inteligencia artificial para simular respaldo social.</li>
+      <li><b>No entregamos piezas inaccesibles</b> aunque el cliente no las haya pedido accesibles.</li>
+    </ul>
+    <p class="fineprint">Estos límites están además redactados como obligación en los
+    <a href="terminos.html">términos y condiciones</a> — no son una promesa de página web.</p>
+  </section>
+
+  ${cta("","¿Trabajamos <span class='grad'>así?</span>","Si esto describe cómo querés que se vea y se comporte tu marca, tenemos mucho de qué hablar.")}
 </main>`;
 
 /* ---------- TÉRMINOS Y CONDICIONES ---------- */
@@ -856,25 +1019,25 @@ const ecosistemaBody = `
         segmentación asistida por modelos. Atención que no duerme.</p>
         <span class="more">Ver el proceso →</span></a>
     </div>
-    <div class="blk__head blk__head--mt"><h3>Cómo se estructura el trabajo</h3>
-    <p>Cuatro niveles de acompañamiento. La diferencia entre uno y otro no es "más piezas": es cuánta
-    de tu operación comercial pasa a funcionar sola.</p></div>
+    <div class="blk__head blk__head--mt"><h3>Cómo se trabaja acá</h3>
+    <p>No hay paquetes en un menú. Hay un estudio que entra a entender tu negocio y diseña una
+    respuesta a la medida — y esa respuesta se define con vos, no se elige de una lista.</p></div>
     <div class="steps">
-      <div class="step"><span class="step__n">01</span><h3>Growth</h3>
-        <p>El arranque ordenado: calendario de contenido consistente, piezas diseñadas, chatbot de
-        texto, SEO local y campañas iniciales. Para dejar de publicar por impulso.</p></div>
-      <div class="step"><span class="step__n">02</span><h3>Performance</h3>
-        <p>Se suma producción grabada, cobertura de eventos, calificación de leads, subtitulado
-        asistido por IA y atención omnicanal con analítica configurada.</p></div>
-      <div class="step"><span class="step__n">03</span><h3>Ecosystem</h3>
-        <p>Producción de alto volumen con dron y B-roll generado por IA, agentes de voz y segmentación
-        automatizada. La marca deja de depender de que alguien se acuerde de publicar.</p></div>
-      <div class="step"><span class="step__n">04</span><h3>Partner 360</h3>
-        <p>Tercerización total del área: documentales y podcasts en 4K, agentes de cierre, CMS
-        desacoplado y consolidación de datos para decisiones a nivel dirección.</p></div>
+      <div class="step"><span class="step__n">01</span><h3>Se estudia</h3>
+        <p>Tu categoría, tu competencia, cómo compra tu cliente y qué está fallando hoy. De ahí sale la
+        tesis: qué va a decir tu marca y por qué alguien debería detenerse a escucharla.</p></div>
+      <div class="step"><span class="step__n">02</span><h3>Se diseña</h3>
+        <p>Dirección de arte propia antes de encender una cámara. Encuadre, ritmo, paleta y voz — lo que
+        hace que tu contenido se reconozca a tres metros sin ver el logo.</p></div>
+      <div class="step"><span class="step__n">03</span><h3>Se produce</h3>
+        <p>Producción propia con equipo profesional. Nada de banco de imágenes disfrazado de marca:
+        cada pieza se rueda, se edita y se colorea con criterio editorial.</p></div>
+      <div class="step"><span class="step__n">04</span><h3>Se sostiene</h3>
+        <p>El oficio no está en el lanzamiento: está en el mes catorce. Ritmo constante, medición honesta
+        y una regla fija — lo que no funciona se corta ese mismo mes.</p></div>
     </div>
-    <p class="fineprint">Cada nivel se cotiza sobre el alcance real de tu marca — no hay tarifario de
-    plantilla. Lo que sí es fijo es qué incluye cada uno y qué no, por escrito, antes de empezar.</p>
+    <p class="fineprint">El alcance se define con vos y queda por escrito antes de empezar: qué incluye,
+    qué no, y en cuánto tiempo. Sin letra pequeña y sin sorpresas en la factura.</p>
   </section>
 
   <section class="blk reveal" id="fidelix">
@@ -901,15 +1064,15 @@ const ecosistemaBody = `
   <section class="blk reveal" id="petix-care">
     <div class="blk__head"><p class="eyebrow">Marca 03</p><h2>Petix Care — el club <span class="grad">de las mascotas.</span></h2>
     <p>Marketplace híbrido de servicios veterinarios y de bienestar animal. Para los comercios es
-    tráfico real y agenda llena; para las familias, acceso a atención médica y estética a precios de
-    club, con recompensas por seguir cuidando bien a su mascota.</p></div>
+    tráfico real y agenda llena; para las familias, acceso a atención médica y estética en condiciones
+    de club, con recompensas por seguir cuidando bien a su mascota.</p></div>
     <div class="cards cards--2">
       <div class="scard">${mark("hand")}<h3>Para veterinarias y comercios</h3>
         <p>Motor de citas, membresías y visibilidad dentro del club. No es un directorio pasivo:
         la plataforma inyecta demanda hacia tu agenda.</p></div>
       <div class="scard">${mark("heart")}<h3>Para dueños de mascotas</h3>
-        <p>Suscripción mensual o anual con beneficios en consulta, estética y servicios asociados,
-        con plan familiar para hogares de varias mascotas.</p></div>
+        <p>Membresía con beneficios en consulta, estética y servicios asociados, con modalidad
+        familiar para hogares de varias mascotas.</p></div>
     </div>
     <div class="hero__cta hero__cta--mt">
       <a class="btn btn--send" href="${WA}?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20Petix%20Care" rel="noopener" target="_blank"><span class="l">Consultar por Petix Care</span>${ARROW}</a>
@@ -918,17 +1081,17 @@ const ecosistemaBody = `
 
   <section class="blk reveal">
     <div class="blk__head"><h2>Beneficios <span class="grad">cruzados.</span></h2>
-    <p>Estar dentro del ecosistema tiene una ventaja concreta y medible: los clientes de una marca
-    entran a las otras en mejores condiciones. No es un programa de puntos — son descuentos reales
-    sobre facturación.</p></div>
+    <p>Pertenecer al ecosistema no es un sello: cambia las condiciones. Quien trabaja con una de las
+    marcas entra a las otras en términos preferenciales, y con un solo interlocutor respondiendo por
+    todo.</p></div>
     <ul class="ticklist">
-      <li><b>De Movix Studio hacia las plataformas</b> — si trabajás con el estudio, entrás a Fidelix o Petix Care con <em>30% de descuento durante los primeros tres meses</em>.</li>
-      <li><b>De las plataformas hacia el estudio</b> — si ya usás Fidelix o Petix Care, tu segundo mes de servicios con Movix Studio lleva descuento según tu plan.</li>
-      <li><b>Por referir</b> — el comercio que trae a un colega asegura descuento en su propia facturación, y el referido entra con beneficio adicional. Ganan los dos, no solo quien refiere.</li>
-      <li><b>Un solo interlocutor</b> — contenido, pauta, lealtad y automatización responden al mismo equipo. Nadie se pasa la bola entre proveedores cuando algo falla.</li>
+      <li><b>Del estudio a las plataformas.</b> Si trabajás con Movix Studio, tu entrada a Fidelix o Petix Care llega en condiciones preferentes desde el primer mes.</li>
+      <li><b>De las plataformas al estudio.</b> Si ya operás con una de nuestras plataformas, la producción creativa entra con esas mismas condiciones.</li>
+      <li><b>Por recomendar.</b> Quien trae a un colega y quien llega recomendado se benefician los dos. Nunca solo el que refiere.</li>
+      <li><b>Un solo interlocutor.</b> Contenido, pauta, lealtad y automatización responden al mismo equipo. Nadie se pasa la bola entre proveedores cuando algo falla.</li>
     </ul>
-    <p class="fineprint">Los porcentajes y las condiciones vigentes se confirman por escrito en tu
-    propuesta antes de contratar. Ver <a href="terminos.html">términos y condiciones</a>.</p>
+    <p class="fineprint">Las condiciones exactas se confirman por escrito en tu propuesta antes de
+    contratar. Ver <a href="terminos.html">términos y condiciones</a>.</p>
   </section>
 
   <section class="blk reveal">
@@ -1257,7 +1420,7 @@ const contactoBody = `
   </section>
   <section class="blk reveal">
     <div class="blk__head"><h2>Antes de escribir, <span class="grad">tal vez esto ayuda.</span></h2></div>
-    <details class="faq"><summary>¿Cuánto cuestan sus servicios?</summary><p>Cada marca necesita algo distinto, así que no hay tarifario de plantilla. El brief nos permite darte un precio real y a la medida — y siempre sabés exactamente qué incluye.</p></details>
+    <details class="faq"><summary>¿Trabajan con paquetes cerrados?</summary><p>No. Un paquete de menú obliga a que tu marca se acomode a una lista; nosotros hacemos lo contrario. Estudiamos tu negocio y diseñamos el alcance que necesita — ni una pieza de más para inflar la factura, ni una de menos para que no funcione. Lo que sí es fijo es que sepás exactamente qué incluye y qué no, por escrito, antes de empezar.</p></details>
     <details class="faq"><summary>¿Trabajan con negocios fuera de Costa Rica?</summary><p>Sí. La operación es remota por diseño; producimos en Costa Rica y gestionamos marcas de cualquier país de habla hispana.</p></details>
     <details class="faq"><summary>¿Qué tan rápido responden?</summary><p>El asistente y el brief, al instante, a cualquier hora. El equipo humano responde por WhatsApp en horario hábil de Costa Rica — y si llenaste el brief, la primera respuesta llega con propuesta incluida.</p></details>
     <details class="faq"><summary>¿Cómo manejan mis datos?</summary><p>Con la misma seriedad que este sitio: sin cookies, sin rastreadores, y tu información solo se usa para atenderte. El detalle completo está en la <a href="privacidad.html">política de privacidad</a> y en los <a href="terminos.html">términos y condiciones</a>.</p></details>
@@ -1301,6 +1464,7 @@ POSTS.forEach(p=>{
 });
 write("soporte.html", page({root:"./", title:"Soporte — Movix Studio", desc:"Asistente 24/7, equipo humano por WhatsApp y la base de conocimiento de Movix Studio.", body:soporteBody}));
 write("ecosistema.html", page({root:"./", title:"Ecosistema — Movix Corporation S.R.L.", desc:"Movix Studio, Fidelix y Petix Care: el motor creativo y las plataformas propias de Movix Corporation S.R.L., Costa Rica.", body:ecosistemaBody}));
+write("inclusion.html", page({root:"./", title:"Inclusión — Movix Studio", desc:"Con orgullo, siempre: la variante Pride permanente, estándares de accesibilidad, representación en la producción y acceso al talento.", body:inclusionBody}));
 write("terminos.html", page({root:"./", title:"Términos y condiciones — Movix Studio", desc:"Marco contractual de Movix Corporation S.R.L.: alcance, propiedad intelectual, uso de IA, accesos, pagos y ley aplicable en Costa Rica.", body:terminosBody}));
 write("intake/index.html", page({root:"../", title:"Brief de marca — Movix Studio", tag:"Brief de marca",
   desc:"Contanos tu marca en 15 minutos: el brief se adapta a tu industria y nos llega directo por WhatsApp.",
